@@ -23,6 +23,8 @@ Le dépôt contient différentes listes d’IP classées selon leur usage :
   * attaques (bruteforce, scans…)
   * bots malveillants
 
+* `ExternalLists.txt` → liste de projets externe concaténée dans le `blacklist.txt`
+
 ---
 
 ## 🧠 Objectif
