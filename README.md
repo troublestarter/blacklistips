@@ -25,7 +25,7 @@ Le dépôt contient différentes listes d’IP classées selon leur usage :
   * attaques (bruteforce, scans…)
   * bots malveillants
 
-* `ExternalLists.txt` → liste de projets externe concaténée dans le `blacklist.txt`
+* `ExternalLists.txt` → liste de projets externe concaténées dans le `blacklist.txt`
 
 ---
 
@@ -67,14 +67,16 @@ Les contributions sont les bienvenues :
 * ajout de nouvelles IP
 * signalement d’erreurs
 * amélioration des listes
+* Fournir un fichier pleinement compatible avec le module **Third-Party threats Feed** des **Sophos XGS**
 
-Merci de créer une **Pull Request** ou une **Issue**.
+Merci de créer une **Pull Request**.
 
 ---
 
 ## 📄 Licence
 
-À définir selon vos besoins (MIT, GPL, etc.)
+**GPL v3**
+Free pour la vie
 
 ---
 
@@ -88,8 +90,16 @@ for ip in $(cat blacklist.txt); do
 done
 ```
 
+Utiliser dans le module **Third-Party threats Feed** des **Sophos XGS**
+
+```
+PROTECT -> ACTIVE THREAT RESPONSE -> THIRD PARTY THREAT FEEDS -> ADD
+<img width="676" height="452" alt="image" src="https://github.com/user-attachments/assets/71d59ab3-c5de-4486-9ff4-9eaea701e340" />
+
+```
+
 ---
 
 ## 📬 Contact
 
-Pour toute question ou suggestion, utilisez les Issues du repository.
+Pour toute question, problème ou réclamation et exclusion, utilisez les **Issues** du repository.
