@@ -94,9 +94,8 @@ Utiliser dans le module **Third-Party threats Feed** des **Sophos XGS**
 
 ```
 PROTECT -> ACTIVE THREAT RESPONSE -> THIRD PARTY THREAT FEEDS -> ADD
-<img width="676" height="452" alt="image" src="https://github.com/user-attachments/assets/71d59ab3-c5de-4486-9ff4-9eaea701e340" />
-
 ```
+<img width="676" height="452" alt="image" src="https://github.com/user-attachments/assets/71d59ab3-c5de-4486-9ff4-9eaea701e340" />
 
 ---
 
