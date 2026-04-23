@@ -10,6 +10,8 @@ Ces listes peuvent être utilisées pour :
 * bloquer des comportements malveillants
 * partager des sources d’IPs à risque
 
+Cette liste est pleinement compatible avec le module Third-Party threats Feed des Sophos XGS
+
 ---
 
 ## ⚙️ Contenu
