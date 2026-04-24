@@ -1,8 +1,8 @@
-# 🚫 Blacklist IPs
+# 🚫 Blacklist IPs HOW-TO
 
 > 🔄 Automatically updated threat intelligence feed (IP + CIDR)
 
-## 🌐 Languages
+## 🌐 Select your Languages !
 
 - 🇬🇧 [English Version](#-english-version)
 - 🇫🇷 [Version Française](#-version-française)
