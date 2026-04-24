@@ -15,8 +15,7 @@ $countFile  = Join-Path $repoDir "count.txt"
 $listFile   = Join-Path $repoDir "ExternalLists.txt"
 $whitelistFile = Join-Path $repoDir "whitelist.txt"
 
-# 🔥 OPTION (désactivée par défaut)
-$enableCIDROptimization = $true
+$enableCIDROptimization = $false
 
 # ================================
 # FUNCTIONS
@@ -44,8 +43,7 @@ function CIDRToRange($cidr) {
 # INIT
 # ================================
 Write-Host "========================================="
-Write-Host "🚀 START SCRIPT (FINAL + CIDR OPTIONAL)"
-Write-Host "📁 Repo :" $repoDir
+Write-Host "🚀 START SCRIPT (FULL + STATS)"
 Write-Host "========================================="
 
 $globalStart = Get-Date
@@ -79,14 +77,11 @@ foreach ($line in [System.IO.File]::ReadAllLines($listFile)) {
 }
 
 Write-Host "🔗 Nombre de sources :" $urls.Count
-$urls | ForEach-Object { Write-Host "→ $_" }
 
 # ================================
 # DOWNLOAD + PARSE
 # ================================
 Write-Host "📥 Téléchargement..."
-
-$downloadStart = Get-Date
 
 $results = $urls | ForEach-Object -Parallel {
 
@@ -117,25 +112,37 @@ $results = $urls | ForEach-Object -Parallel {
             }
         }
 
-        Write-Host "✅ OK ($($result.Count))"
     }
     catch {
         Write-Host "⚠️ Erreur : $url"
     }
 
-    return $result
+    [PSCustomObject]@{
+        Url   = $url
+        Count = $result.Count
+        Data  = $result
+    }
 
 } -ThrottleLimit 2
 
-$downloadEnd = Get-Date
+# ================================
+# STATS PAR SOURCE
+# ================================
+Write-Host "=============================="
+Write-Host "📊 STATS PAR SOURCE"
+Write-Host "=============================="
+
+$results | Sort-Object Count -Descending | ForEach-Object {
+    Write-Host ("{0} → {1} entrées" -f $_.Url, $_.Count)
+}
 
 # ================================
 # FLATTEN
 # ================================
-$tempData = $results | ForEach-Object { $_ }
+$tempData = foreach ($r in $results) { $r.Data }
 
 # ================================
-# CLEAN + DEDUP (OBLIGATOIRE)
+# CLEAN + DEDUP
 # ================================
 Write-Host "🧹 Nettoyage + suppression des doublons..."
 
@@ -144,6 +151,15 @@ $uniqueData = $tempData |
     Sort-Object -Unique
 
 Write-Host "📊 Total avant whitelist :" $uniqueData.Count
+
+# ================================
+# STATS AVANT WHITELIST
+# ================================
+$ipCount   = ($uniqueData | Where-Object { $_ -notmatch "/" }).Count
+$cidrCount = ($uniqueData | Where-Object { $_ -match "/" }).Count
+
+Write-Host "📊 IP :" $ipCount
+Write-Host "📊 CIDR :" $cidrCount
 
 # ================================
 # WHITELIST
@@ -187,10 +203,17 @@ if (Test-Path $whitelistFile) {
     $uniqueData = $filtered
 
     Write-Host "📊 Total après whitelist :" $uniqueData.Count
+
+    # stats post WL
+    $ipCount   = ($uniqueData | Where-Object { $_ -notmatch "/" }).Count
+    $cidrCount = ($uniqueData | Where-Object { $_ -match "/" }).Count
+
+    Write-Host "📊 (POST-WL) IP :" $ipCount
+    Write-Host "📊 (POST-WL) CIDR :" $cidrCount
 }
 
 # ================================
-# CIDR OPTIMIZATION (OPTIONNEL)
+# CIDR OPTIMIZATION
 # ================================
 if ($enableCIDROptimization) {
 
@@ -225,15 +248,7 @@ else {
 }
 
 # ================================
-# VALIDATION
-# ================================
-if ($uniqueData.Count -lt 10) {
-    Write-Host "❌ ERREUR : blacklist trop petite"
-    exit
-}
-
-# ================================
-# SAVE FILES
+# SAVE
 # ================================
 $uniqueData | Out-File -Encoding ASCII $outputFile
 $uniqueData.Count | Out-File -Encoding ASCII $countFile
@@ -242,17 +257,7 @@ Write-Host "✅ blacklist.txt généré"
 Write-Host "📄 count.txt généré"
 
 # ================================
-# TIMINGS
-# ================================
-$totalEnd = Get-Date
-
-Write-Host "========================================="
-Write-Host "⏱️ Download :" ($downloadEnd - $downloadStart).TotalSeconds "sec"
-Write-Host "⏱️ Total :" ($totalEnd - $globalStart).TotalSeconds "sec"
-Write-Host "========================================="
-
-# ================================
-# GIT PUSH (SMART)
+# GIT PUSH
 # ================================
 if (Test-Path ".git") {
 
@@ -268,7 +273,4 @@ if (Test-Path ".git") {
     else {
         Write-Host "ℹ️ Aucun changement"
     }
-}
-else {
-    Write-Host "❌ Pas de repo git"
 }
