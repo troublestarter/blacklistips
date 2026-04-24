@@ -106,9 +106,9 @@ See `ExternalLists.txt` for the full list of providers.
 
 ## ⚠️ Disclaimer
 
-- false positives may occur  
+- False positives may occur  
 - IPs may be dynamic  
-- depends on external sources  
+- Depends on external sources  
 
 👉 Use with caution.
 
@@ -218,9 +218,9 @@ Voir `ExternalLists.txt`
 
 ## ⚠️ Avertissement
 
-- faux positifs possibles  
+- Faux positifs possibles  
 - IP dynamiques  
-- dépend des sources  
+- Dépend des sources  
 
 👉 Utilisation avec discernement
 
