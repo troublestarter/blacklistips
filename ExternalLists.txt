@@ -9,4 +9,5 @@ https://feodotracker.abuse.ch/downloads/ipblocklist.txt
 https://sslbl.abuse.ch/blacklist/sslipblacklist.txt
 https://www.spamhaus.org/drop/drop.txt
 https://www.spamhaus.org/drop/edrop.txt
+https://raw.githubusercontent.com/troublestarter/blacklistips/refs/heads/main/custom-blacklist.txt
 #https://raw.githubusercontent.com/bitwire-it/ipblocklist/main/inbound.txt
