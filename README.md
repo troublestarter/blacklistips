@@ -97,6 +97,8 @@ PROTECT -> ACTIVE THREAT RESPONSE -> THIRD PARTY THREAT FEEDS -> ADD
 ```
 <img width="676" height="452" alt="image" src="https://github.com/user-attachments/assets/71d59ab3-c5de-4486-9ff4-9eaea701e340" />
 
+Indiquer l'URL : https://raw.githubusercontent.com/troublestarter/blacklistips/refs/heads/main/blacklist.txt
+
 ---
 
 ## 📬 Contact
