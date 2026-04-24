@@ -15,8 +15,6 @@ $countFile  = Join-Path $repoDir "count.txt"
 $listFile   = Join-Path $repoDir "ExternalLists.txt"
 $whitelistFile = Join-Path $repoDir "whitelist.txt"
 
-$enableCIDROptimization = $false
-
 # ================================
 # FUNCTIONS
 # ================================
@@ -43,14 +41,14 @@ function CIDRToRange($cidr) {
 # INIT
 # ================================
 Write-Host "========================================="
-Write-Host "🚀 START SCRIPT (FINAL + WHITELIST)"
+Write-Host "🚀 START SCRIPT (FINAL FIXED)"
 Write-Host "📁 Repo :" $repoDir
 Write-Host "========================================="
 
 $globalStart = Get-Date
 
 # ================================
-# LOAD URL LIST
+# LOAD URL LIST (FIXED)
 # ================================
 Write-Host "📥 Chargement des sources..."
 
@@ -59,23 +57,27 @@ if (-not (Test-Path $listFile)) {
     exit
 }
 
-$urls = [System.IO.File]::ReadAllLines($listFile) |
-    ForEach-Object {
-        $line = $_.Trim()
+$urls = @()
 
-        if (-not $line) { continue }
-        if ($line -match '^\s*#') { continue }
+foreach ($line in [System.IO.File]::ReadAllLines($listFile)) {
 
-        if ($line -match '#') {
-            $line = ($line -split '#')[0].Trim()
-        }
+    $line = $line.Trim()
 
-        if ($line -match '^https?://') {
-            $line
-        }
+    if (-not $line) { continue }
+    if ($line -match '^\s*#') { continue }
+
+    # enlever commentaires inline
+    if ($line -match '#') {
+        $line = ($line -split '#')[0].Trim()
     }
 
+    if ($line -match '^https?://') {
+        $urls += $line
+    }
+}
+
 Write-Host "🔗 Nombre de sources :" $urls.Count
+$urls | ForEach-Object { Write-Host "→ $_" }
 
 # ================================
 # DOWNLOAD + PARSE
