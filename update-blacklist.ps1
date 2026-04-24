@@ -11,15 +11,16 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
 # ================================
 $externalListUrl = "https://raw.githubusercontent.com/troublestarter/blacklistips/main/ExternalLists.txt"
 
-# IMPORTANT : fichier DIRECTEMENT dans le repo
-$outputFile = Join-Path (Get-Location) "blacklist.txt"
+$repoDir = Get-Location
+$outputFile = Join-Path $repoDir "blacklist.txt"
+$countFile = Join-Path $repoDir "count.txt"
 
 # ================================
 # INIT
 # ================================
 Write-Host "========================================="
-Write-Host "🚀 START SCRIPT (FINAL)"
-Write-Host "📁 Repo dir :" (Get-Location)
+Write-Host "🚀 START SCRIPT (IP + CIDR + COUNT)"
+Write-Host "📁 Repo dir :" $repoDir
 Write-Host "========================================="
 
 $globalStart = Get-Date
@@ -29,12 +30,7 @@ $globalStart = Get-Date
 # ================================
 Write-Host "📥 Récupération des URLs..."
 
-try {
-    $urlsContent = (New-Object System.Net.WebClient).DownloadString($externalListUrl)
-} catch {
-    Write-Host "❌ Impossible de récupérer ExternalLists.txt"
-    exit
-}
+$urlsContent = (New-Object System.Net.WebClient).DownloadString($externalListUrl)
 
 $urls = $urlsContent -split "`n" |
     ForEach-Object { $_.Trim() } |
@@ -63,7 +59,12 @@ $tempData = $urls | ForEach-Object -Parallel {
         foreach ($line in $content -split "`n") {
             $clean = $line.Trim()
 
-            if ($clean -and -not $clean.StartsWith("#")) {
+            if (-not $clean -or $clean.StartsWith("#")) {
+                continue
+            }
+
+            if ($clean -match '^\d{1,3}(\.\d{1,3}){3}$' -or
+                $clean -match '^\d{1,3}(\.\d{1,3}){3}/\d{1,2}$') {
                 [void]$result.Add($clean)
             }
         }
@@ -94,20 +95,24 @@ $uniqueData = $tempData |
 $cleanEnd = Get-Date
 
 # ================================
-# VALIDATION (IMPORTANT)
+# VALIDATION
 # ================================
 if ($uniqueData.Count -lt 10) {
-    Write-Host "❌ ERREUR : blacklist trop petite → abort push"
+    Write-Host "❌ ERREUR : blacklist trop petite → abort"
     exit
 }
 
 # ================================
-# SAVE FILE (DIRECT REPO)
+# SAVE FILES
 # ================================
 $uniqueData | Out-File -Encoding ASCII $outputFile
 
-Write-Host "✅ Fichier généré : $outputFile"
-Write-Host "📊 Total IPs :" $uniqueData.Count
+# 🔥 COUNT FILE
+$uniqueData.Count | Out-File -Encoding ASCII $countFile
+
+Write-Host "✅ blacklist.txt généré"
+Write-Host "📊 Total entrées :" $uniqueData.Count
+Write-Host "📄 count.txt généré"
 
 # ================================
 # TIMINGS
@@ -124,15 +129,14 @@ Write-Host "========================================="
 # GIT PUSH
 # ================================
 if (Test-Path ".git") {
-
     Write-Host "🚀 Push vers GitHub..."
 
-    git add blacklist.txt
+    git add blacklist.txt count.txt
     git commit -m "Auto update blacklist ($(Get-Date -Format 'yyyy-MM-dd HH:mm'))" | Out-Null
     git push
 
     Write-Host "✅ Push OK"
 }
 else {
-    Write-Host "❌ Pas de repo git → aucun push"
+    Write-Host "❌ Pas de repo git"
 }
