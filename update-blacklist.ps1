@@ -18,7 +18,7 @@ $listFile   = Join-Path $repoDir "ExternalLists.txt"
 # INIT
 # ================================
 Write-Host "========================================="
-Write-Host "🚀 START SCRIPT (FINAL FAST)"
+Write-Host "🚀 START SCRIPT (FINAL + STATS)"
 Write-Host "📁 Repo :" $repoDir
 Write-Host "========================================="
 
@@ -45,13 +45,13 @@ $urls = [System.IO.File]::ReadAllLines($listFile) |
 Write-Host "🔗 Nombre de sources :" $urls.Count
 
 # ================================
-# DOWNLOAD + PARSE
+# DOWNLOAD + PARSE + STATS
 # ================================
 Write-Host "📥 Téléchargement..."
 
 $downloadStart = Get-Date
 
-$tempData = $urls | ForEach-Object -Parallel {
+$results = $urls | ForEach-Object -Parallel {
 
     $url = $_
     Write-Host "→ $url"
@@ -68,15 +68,12 @@ $tempData = $urls | ForEach-Object -Parallel {
 
             if (-not $clean) { continue }
 
-            # commentaires
             if ($clean.StartsWith("#") -or $clean.StartsWith(";")) { continue }
 
-            # enlever après ;
             if ($clean -match ';') {
                 $clean = ($clean -split ';')[0].Trim()
             }
 
-            # IP ou CIDR
             if (
                 $clean -match '^\d{1,3}(\.\d{1,3}){3}$' -or
                 $clean -match '^\d{1,3}(\.\d{1,3}){3}/\d{1,2}$'
@@ -85,17 +82,39 @@ $tempData = $urls | ForEach-Object -Parallel {
             }
         }
 
-        Write-Host "✅ OK"
+        Write-Host "✅ OK ($($result.Count))"
+
     }
     catch {
         Write-Host "⚠️ Erreur : $url"
     }
 
-    return $result
+    # retourner objet structuré
+    [PSCustomObject]@{
+        Url  = $url
+        Data = $result
+        Count = $result.Count
+    }
 
 } -ThrottleLimit 2
 
 $downloadEnd = Get-Date
+
+# ================================
+# STATS PAR SOURCE
+# ================================
+Write-Host "=============================="
+Write-Host "📊 STATS PAR SOURCE"
+Write-Host "=============================="
+
+$results | Sort-Object Count -Descending | ForEach-Object {
+    Write-Host ("{0} → {1} entrées" -f $_.Url, $_.Count)
+}
+
+# ================================
+# FLATTEN DATA
+# ================================
+$tempData = $results | ForEach-Object { $_.Data } | ForEach-Object { $_ }
 
 # ================================
 # CLEAN + UNIQUE
@@ -106,64 +125,7 @@ $uniqueData = $tempData |
     Where-Object { $_ -ne "" } |
     Sort-Object -Unique
 
-# ================================
-# FAST CIDR OPTIMIZATION
-# ================================
-Write-Host "🔍 Optimisation CIDR (rapide)..."
-
-# Convert IP → int
-function IPToInt($ip) {
-    $b = $ip.Split('.') | ForEach-Object {[int]$_}
-    return ($b[0] -shl 24) -bor ($b[1] -shl 16) -bor ($b[2] -shl 8) -bor $b[3]
-}
-
-# Convert CIDR → range
-function CIDRToRange($cidr) {
-    $parts = $cidr -split "/"
-    $ip = $parts[0]
-    $prefix = [int]$parts[1]
-
-    $base = IPToInt $ip
-    $size = [math]::Pow(2, (32 - $prefix))
-
-    return @{
-        start = $base
-        end   = $base + $size - 1
-    }
-}
-
-# Séparer
-$cidrs = $uniqueData | Where-Object { $_ -match "/" }
-$ips   = $uniqueData | Where-Object { $_ -notmatch "/" }
-
-# Préparer + trier
-$cidrRanges = $cidrs | ForEach-Object { CIDRToRange $_ } |
-    Sort-Object start
-
-# Filtrer IP (optimisé)
-$filteredIPs = foreach ($ip in $ips) {
-
-    $ipInt = IPToInt $ip
-    $match = $false
-
-    foreach ($range in $cidrRanges) {
-
-        # 🔥 optimisation clé
-        if ($ipInt -lt $range.start) { break }
-
-        if ($ipInt -le $range.end) {
-            $match = $true
-            break
-        }
-    }
-
-    if (-not $match) { $ip }
-}
-
-# Merge final
-$uniqueData = $filteredIPs + $cidrs
-
-Write-Host "📊 Après optimisation :" $uniqueData.Count "entrées"
+Write-Host "📊 Total final :" $uniqueData.Count
 
 # ================================
 # VALIDATION
