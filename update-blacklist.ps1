@@ -114,7 +114,7 @@ $results | Sort-Object Count -Descending | ForEach-Object {
 # ================================
 # FLATTEN DATA
 # ================================
-$tempData = $results | ForEach-Object { $_.Data } | ForEach-Object { $_ }
+$tempData = foreach ($r in $results) { $r.Data }
 
 # ================================
 # CLEAN + UNIQUE
