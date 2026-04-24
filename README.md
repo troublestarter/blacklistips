@@ -14,8 +14,9 @@
 ## 📑 Table of Contents
 
 - [📌 Description](#-description)
-- [🚀 Quick Usage](#-quick-usage)
-- [⚙️ How it works](#️-how-it-works)
+- [🚀 Quick Usage (manual)](#-quick-usage-manual)
+- [🚀 Sophos XGS Firewall Usage (With MTR)](#-sophos-xgs-firewall-usage-with-mtr)
+- [⚙️ Your own Usage with the script](#️-your-own-usage-with-the-script)
 - [⚙️ CIDR Optimization Option](#️-cidr-optimization-option)
 - [📂 Repository Content](#-repository-content)
 - [📡 Sources](#-sources)
@@ -34,15 +35,13 @@ Data is aggregated from multiple public sources, cleaned, deduplicated, and publ
 
 ---
 
-## 🚀 Quick Usage
+## 🚀 Quick Usage (manual)
 
 👉 You **do NOT need the script** to use this project.
 
 Simply use this URL:
 
 https://raw.githubusercontent.com/troublestarter/blacklistips/main/blacklist.txt
-
-**Current size:** ~406,000 entries
 
 Use it directly in:
 - firewalls
@@ -52,7 +51,19 @@ Use it directly in:
 
 ---
 
-## ⚙️ How it works
+## 🚀 Sophos XGS Firewall Usage (With MTR)
+
+👉 You **do NOT need the script** to use this project.
+
+Just add the source below:
+
+https://raw.githubusercontent.com/troublestarter/blacklistips/main/blacklist.txt
+
+Go to **Protect → Active Threat Response → Third-Party Threat Feeds** and add a new source.
+
+---
+
+## ⚙️ Your own Usage with the script
 
 The PowerShell script (`update-blacklist.ps1`) is optional and used to:
 
@@ -77,16 +88,16 @@ $enableCIDROptimization = $false
 
 ## 📂 Repository Content
 
-- blacklist.txt
-- count.txt
-- ExternalLists.txt
-- update-blacklist.ps1
+- `blacklist.txt` → main list (IP + CIDR)
+- `count.txt` → total entries
+- `ExternalLists.txt` → sources
+- `update-blacklist.ps1` → script
 
 ---
 
 ## 📡 Sources
 
-See ExternalLists.txt for the full list of providers.
+See `ExternalLists.txt` for the full list of providers.
 
 ---
 
@@ -111,7 +122,8 @@ See ExternalLists.txt for the full list of providers.
 
 ## 🤝 Contribution
 
-Pull Requests and Issues welcome
+Contributions are welcome via Pull Requests and Issues.  
+Changes are reviewed before being merged.
 
 ---
 
@@ -126,8 +138,9 @@ GPL v3
 ## 📑 Sommaire
 
 - [📌 Description](#-description-1)
-- [🚀 Utilisation rapide](#-utilisation-rapide)
-- [⚙️ Fonctionnement](#️-fonctionnement)
+- [🚀 Utilisation rapide (manuel)](#-utilisation-rapide-manuel)
+- [🚀 Utilisation Sophos XGS (MTR)](#-utilisation-sophos-xgs-mtr)
+- [⚙️ Utilisation avancée avec script](#️-utilisation-avancée-avec-script)
 - [⚙️ Option CIDR](#️-option-cidr)
 - [📂 Contenu](#-contenu)
 - [📡 Sources](#-sources-1)
@@ -146,7 +159,7 @@ Les données sont agrégées à partir de sources publiques, nettoyées et dédu
 
 ---
 
-## 🚀 Utilisation rapide
+## 🚀 Utilisation rapide (manuel)
 
 👉 Aucun script nécessaire.
 
@@ -154,11 +167,22 @@ Utilisez directement :
 
 https://raw.githubusercontent.com/troublestarter/blacklistips/main/blacklist.txt
 
-**Taille actuelle :** ~406 000 entrées
+---
+
+## 🚀 Utilisation Sophos XGS (MTR)
+
+👉 Aucun script nécessaire.
+
+Ajoutez simplement la source suivante :
+
+https://raw.githubusercontent.com/troublestarter/blacklistips/main/blacklist.txt
+
+Puis allez dans :  
+**Protect → Active Threat Response → Third-Party Threat Feeds**
 
 ---
 
-## ⚙️ Fonctionnement
+## ⚙️ Utilisation avancée avec script
 
 Le script PowerShell sert uniquement à générer la liste :
 
@@ -182,16 +206,16 @@ $enableCIDROptimization = $false
 
 ## 📂 Contenu
 
-- blacklist.txt  
-- count.txt  
-- ExternalLists.txt  
-- update-blacklist.ps1  
+- `blacklist.txt`  
+- `count.txt`  
+- `ExternalLists.txt`  
+- `update-blacklist.ps1`  
 
 ---
 
 ## 📡 Sources
 
-Voir ExternalLists.txt
+Voir `ExternalLists.txt`
 
 ---
 
@@ -216,7 +240,8 @@ Voir ExternalLists.txt
 
 ## 🤝 Contribution
 
-Issues / PR bienvenues
+Les contributions sont les bienvenues via Pull Requests et Issues.  
+Les modifications sont validées avant intégration.
 
 ---
 
