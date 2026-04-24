@@ -2,7 +2,7 @@
 # CHECK VERSION
 # ================================
 if ($PSVersionTable.PSVersion.Major -lt 7) {
-    Write-Host "❌ Ce script nécessite PowerShell 7+"
+    Write-Host "❌ The script needs PowerShell 7+"
     exit
 }
 
@@ -133,7 +133,7 @@ Write-Host "📊 STATS BY SOURCE (BLACKLIST)"
 Write-Host "=============================="
 
 $results | Sort-Object Count -Descending | ForEach-Object {
-    Write-Host ("{0} → {1} entrées" -f $_.Url, $_.Count)
+    Write-Host ("{0} → {1} entries" -f $_.Url, $_.Count)
 }
 
 # ================================
