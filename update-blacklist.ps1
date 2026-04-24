@@ -16,7 +16,7 @@ $listFile   = Join-Path $repoDir "ExternalLists.txt"
 $whitelistFile = Join-Path $repoDir "whitelist.txt"
 
 # 🔥 OPTION (désactivée par défaut)
-$enableCIDROptimization = $false
+$enableCIDROptimization = $true
 
 # ================================
 # FUNCTIONS
