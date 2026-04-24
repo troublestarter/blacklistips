@@ -15,6 +15,9 @@ $countFile  = Join-Path $repoDir "count.txt"
 $listFile   = Join-Path $repoDir "ExternalLists.txt"
 $whitelistFile = Join-Path $repoDir "whitelist.txt"
 
+# 🔥 OPTION (désactivée par défaut)
+$enableCIDROptimization = $false
+
 # ================================
 # FUNCTIONS
 # ================================
@@ -41,14 +44,14 @@ function CIDRToRange($cidr) {
 # INIT
 # ================================
 Write-Host "========================================="
-Write-Host "🚀 START SCRIPT (FINAL FIXED)"
+Write-Host "🚀 START SCRIPT (FINAL + CIDR OPTIONAL)"
 Write-Host "📁 Repo :" $repoDir
 Write-Host "========================================="
 
 $globalStart = Get-Date
 
 # ================================
-# LOAD URL LIST (FIXED)
+# LOAD URL LIST
 # ================================
 Write-Host "📥 Chargement des sources..."
 
@@ -66,7 +69,6 @@ foreach ($line in [System.IO.File]::ReadAllLines($listFile)) {
     if (-not $line) { continue }
     if ($line -match '^\s*#') { continue }
 
-    # enlever commentaires inline
     if ($line -match '#') {
         $line = ($line -split '#')[0].Trim()
     }
@@ -94,8 +96,7 @@ $results = $urls | ForEach-Object -Parallel {
     $result = New-Object System.Collections.Generic.List[string]
 
     try {
-        $wc = New-Object System.Net.WebClient
-        $content = $wc.DownloadString($url)
+        $content = (New-Object System.Net.WebClient).DownloadString($url)
 
         foreach ($line in $content -split "`n") {
 
@@ -122,36 +123,21 @@ $results = $urls | ForEach-Object -Parallel {
         Write-Host "⚠️ Erreur : $url"
     }
 
-    [PSCustomObject]@{
-        Url   = $url
-        Data  = $result
-        Count = $result.Count
-    }
+    return $result
 
 } -ThrottleLimit 2
 
 $downloadEnd = Get-Date
 
 # ================================
-# STATS
-# ================================
-Write-Host "=============================="
-Write-Host "📊 STATS PAR SOURCE"
-Write-Host "=============================="
-
-$results | Sort-Object Count -Descending | ForEach-Object {
-    Write-Host ("{0} → {1} entrées" -f $_.Url, $_.Count)
-}
-
-# ================================
 # FLATTEN
 # ================================
-$tempData = foreach ($r in $results) { $r.Data }
+$tempData = $results | ForEach-Object { $_ }
 
 # ================================
-# CLEAN + UNIQUE
+# CLEAN + DEDUP (OBLIGATOIRE)
 # ================================
-Write-Host "🧹 Nettoyage..."
+Write-Host "🧹 Nettoyage + suppression des doublons..."
 
 $uniqueData = $tempData |
     Where-Object { $_ -ne "" } |
@@ -204,6 +190,41 @@ if (Test-Path $whitelistFile) {
 }
 
 # ================================
+# CIDR OPTIMIZATION (OPTIONNEL)
+# ================================
+if ($enableCIDROptimization) {
+
+    Write-Host "🔍 Optimisation CIDR activée"
+
+    $cidrs = $uniqueData | Where-Object { $_ -match "/" }
+    $ips   = $uniqueData | Where-Object { $_ -notmatch "/" }
+
+    $cidrRanges = $cidrs | ForEach-Object { CIDRToRange $_ }
+
+    $filteredIPs = foreach ($ip in $ips) {
+
+        $ipInt = IPToInt $ip
+        $skip = $false
+
+        foreach ($r in $cidrRanges) {
+            if ($ipInt -ge $r.start -and $ipInt -le $r.end) {
+                $skip = $true
+                break
+            }
+        }
+
+        if (-not $skip) { $ip }
+    }
+
+    $uniqueData = $filteredIPs + $cidrs
+
+    Write-Host "📊 Total après CIDR :" $uniqueData.Count
+}
+else {
+    Write-Host "ℹ️ Optimisation CIDR désactivée"
+}
+
+# ================================
 # VALIDATION
 # ================================
 if ($uniqueData.Count -lt 10) {
@@ -212,7 +233,7 @@ if ($uniqueData.Count -lt 10) {
 }
 
 # ================================
-# SAVE
+# SAVE FILES
 # ================================
 $uniqueData | Out-File -Encoding ASCII $outputFile
 $uniqueData.Count | Out-File -Encoding ASCII $countFile
