@@ -64,7 +64,7 @@ Go to **Protect → Active Threat Response → Third-Party Threat Feeds** and ad
 
 The PowerShell script (`update-blacklist.ps1`) is optional and used to:
 
-- Download external lists
+- Download external lists and your custom blacklist from `ExternalLists.txt`
 - Clean data
 - Deduplicate entries
 - Delete whitelist records
@@ -87,11 +87,12 @@ $enableCIDROptimization = $false
 
 ## 📂 Repository Content
 
-- `blacklist.txt` → main list (IP + CIDR)
-- `count.txt` → total entries
-- `ExternalLists.txt` → sources
+- `blacklist.txt` → Final list (IP + CIDR) of malicious actors
+- `count.txt` → total entries in `blacklist.txt` file
+- `custom-blacklist.txt` → You own list of IPs or CIDR to inject to final blacklist.txt
+- `custom-whitelist.txt` → You own list of IPs or CIDR to exclude to final blacklist.txt
+- `ExternalLists.txt` → External sources of IPs and CIDR
 - `update-blacklist.ps1` → script
-- `whitelist.txt` → list to exclude to final blacklist.txt
 
 ---
 
@@ -180,7 +181,7 @@ Puis allez dans :
 
 Le script PowerShell sert uniquement à générer la liste :
 
-- Récupération des sources
+- Récupération des sources externe et custom depuis `ExternalLists.txt`
 - Nettoyage des données
 - Déduplication des données
 - Supprime les enregistrements de la whitelist
@@ -202,11 +203,12 @@ $enableCIDROptimization = $false
 
 ## 📂 Contenu
 
-- `blacklist.txt`  
-- `count.txt`  
-- `ExternalLists.txt`  
-- `update-blacklist.ps1`  
-- `whitelist.txt` → liste qui sera exclue dans blacklist.txt
+- `blacklist.txt` → Liste finale (IP + CIDR) d'acteurs malveillants
+- `count.txt` → Nombre total d'entrées dans le fichier `blacklist.txt`
+- `custom-blacklist.txt` → Votre liste d'adresses IP ou de CIDR à ajouter à la liste noire finale (blacklist.txt)
+- `custom-whitelist.txt` → Votre liste d'adresses IP ou de CIDR à exclure de la liste noire finale (blacklist.txt)
+- `ExternalLists.txt` → Sources externes d'adresses IP et de CIDR
+- `update-blacklist.ps1` → Script
 
 ---
 
