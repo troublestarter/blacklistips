@@ -42,12 +42,6 @@ Simply use this URL:
 
 https://raw.githubusercontent.com/troublestarter/blacklistips/main/blacklist.txt
 
-Use it directly in:
-- firewalls
-- security tools
-- scripts
-- Sophos XGS (Third-Party Threat Feed compatible)
-
 ---
 
 ## 🚀 Sophos XGS Firewall Usage (With MTR)
@@ -70,11 +64,13 @@ Go to **Protect → Active Threat Response → Third-Party Threat Feeds** and ad
 
 The PowerShell script (`update-blacklist.ps1`) is optional and used to:
 
-- download external lists
-- clean data
-- deduplicate entries
-- generate `blacklist.txt`
-- push updates to GitHub
+- Download external lists
+- Clean data
+- Deduplicate entries
+- Delete whitelist records
+- Generate `blacklist.txt`
+- Optimization of IP addresses that would be contained in CIDRs (Optional)
+- Push updates to GitHub
 
 ---
 
@@ -95,6 +91,7 @@ $enableCIDROptimization = $false
 - `count.txt` → total entries
 - `ExternalLists.txt` → sources
 - `update-blacklist.ps1` → script
+- `whitelist.txt` → list to exclude to final blacklist.txt
 
 ---
 
@@ -183,10 +180,12 @@ Puis allez dans :
 
 Le script PowerShell sert uniquement à générer la liste :
 
-- récupération des sources  
-- nettoyage  
-- déduplication  
-- publication  
+- Récupération des sources
+- Nettoyage des données
+- Déduplication des données
+- Supprime les enregistrements de la whitelist
+- Optimisation des IP qui seraient contenu dans les CIDR (En option)
+- Publication des mises à jour sur github
 
 ---
 
@@ -197,7 +196,7 @@ $enableCIDROptimization = $false
 ```
 
 - OFF → rapide, conserve IP + CIDR (recommandé)
-- ON → supprime les IP incluses dans des CIDR (plus lent)
+- ON → supprime les IP incluses dans des CIDR (plus lent et gain faible)
 
 ---
 
@@ -207,6 +206,7 @@ $enableCIDROptimization = $false
 - `count.txt`  
 - `ExternalLists.txt`  
 - `update-blacklist.ps1`  
+- `whitelist.txt` → liste qui sera exclue dans blacklist.txt
 
 ---
 
