@@ -13,15 +13,37 @@ $repoDir    = Get-Location
 $outputFile = Join-Path $repoDir "blacklist.txt"
 $countFile  = Join-Path $repoDir "count.txt"
 $listFile   = Join-Path $repoDir "ExternalLists.txt"
+$whitelistFile = Join-Path $repoDir "whitelist.txt"
 
-# 🔥 Activer / désactiver optimisation CIDR
 $enableCIDROptimization = $false
+
+# ================================
+# FUNCTIONS
+# ================================
+function IPToInt($ip) {
+    $b = $ip.Split('.') | ForEach-Object {[int]$_}
+    return ($b[0] -shl 24) -bor ($b[1] -shl 16) -bor ($b[2] -shl 8) -bor $b[3]
+}
+
+function CIDRToRange($cidr) {
+    $parts = $cidr -split "/"
+    $ip = $parts[0]
+    $prefix = [int]$parts[1]
+
+    $base = IPToInt $ip
+    $size = [math]::Pow(2, (32 - $prefix))
+
+    return @{
+        start = $base
+        end   = $base + $size - 1
+    }
+}
 
 # ================================
 # INIT
 # ================================
 Write-Host "========================================="
-Write-Host "🚀 START SCRIPT (FINAL + CIDR OPTIONAL)"
+Write-Host "🚀 START SCRIPT (FINAL + WHITELIST)"
 Write-Host "📁 Repo :" $repoDir
 Write-Host "========================================="
 
@@ -41,8 +63,8 @@ $urls = [System.IO.File]::ReadAllLines($listFile) |
     ForEach-Object {
         $line = $_.Trim()
 
-        if (-not $line) { return }
-        if ($line -match '^\s*#') { return }
+        if (-not $line) { continue }
+        if ($line -match '^\s*#') { continue }
 
         if ($line -match '#') {
             $line = ($line -split '#')[0].Trim()
@@ -109,7 +131,7 @@ $results = $urls | ForEach-Object -Parallel {
 $downloadEnd = Get-Date
 
 # ================================
-# STATS PAR SOURCE
+# STATS
 # ================================
 Write-Host "=============================="
 Write-Host "📊 STATS PAR SOURCE"
@@ -120,7 +142,7 @@ $results | Sort-Object Count -Descending | ForEach-Object {
 }
 
 # ================================
-# FLATTEN PROPRE
+# FLATTEN
 # ================================
 $tempData = foreach ($r in $results) { $r.Data }
 
@@ -133,63 +155,50 @@ $uniqueData = $tempData |
     Where-Object { $_ -ne "" } |
     Sort-Object -Unique
 
-Write-Host "📊 Total avant CIDR :" $uniqueData.Count
+Write-Host "📊 Total avant whitelist :" $uniqueData.Count
 
 # ================================
-# CIDR OPTIMIZATION (OPTIONNEL)
+# WHITELIST
 # ================================
-if ($enableCIDROptimization) {
+if (Test-Path $whitelistFile) {
 
-    Write-Host "🔍 Optimisation IP incluses dans CIDR..."
+    Write-Host "🛡️ Application whitelist..."
 
-    function IPToInt($ip) {
-        $b = $ip.Split('.') | ForEach-Object {[int]$_}
-        return ($b[0] -shl 24) -bor ($b[1] -shl 16) -bor ($b[2] -shl 8) -bor $b[3]
-    }
+    $whitelist = [System.IO.File]::ReadAllLines($whitelistFile) |
+        ForEach-Object { $_.Trim() } |
+        Where-Object { $_ -ne "" -and -not $_.StartsWith("#") }
 
-    function CIDRToRange($cidr) {
-        $parts = $cidr -split "/"
-        $ip = $parts[0]
-        $prefix = [int]$parts[1]
+    $wlCIDR = $whitelist | Where-Object { $_ -match "/" }
+    $wlIP   = $whitelist | Where-Object { $_ -notmatch "/" }
 
-        $base = IPToInt $ip
-        $size = [math]::Pow(2, (32 - $prefix))
+    $wlRanges = $wlCIDR | ForEach-Object { CIDRToRange $_ }
 
-        return @{
-            start = $base
-            end   = $base + $size - 1
+    $filtered = foreach ($entry in $uniqueData) {
+
+        if ($entry -match "/") {
+            if ($wlCIDR -contains $entry) { continue }
+            $entry
         }
-    }
+        else {
+            if ($wlIP -contains $entry) { continue }
 
-    $cidrs = $uniqueData | Where-Object { $_ -match "/" }
-    $ips   = $uniqueData | Where-Object { $_ -notmatch "/" }
+            $ipInt = IPToInt $entry
+            $skip = $false
 
-    Write-Host "📊 IP :" $ips.Count " | CIDR :" $cidrs.Count
-
-    $cidrRanges = $cidrs | ForEach-Object { CIDRToRange $_ } |
-        Sort-Object start
-
-    $filteredIPs = foreach ($ip in $ips) {
-
-        $ipInt = IPToInt $ip
-        $match = $false
-
-        foreach ($range in $cidrRanges) {
-
-            if ($ipInt -lt $range.start) { break }
-
-            if ($ipInt -le $range.end) {
-                $match = $true
-                break
+            foreach ($r in $wlRanges) {
+                if ($ipInt -ge $r.start -and $ipInt -le $r.end) {
+                    $skip = $true
+                    break
+                }
             }
-        }
 
-        if (-not $match) { $ip }
+            if (-not $skip) { $entry }
+        }
     }
 
-    $uniqueData = $filteredIPs + $cidrs
+    $uniqueData = $filtered
 
-    Write-Host "📊 Total après CIDR :" $uniqueData.Count
+    Write-Host "📊 Total après whitelist :" $uniqueData.Count
 }
 
 # ================================
@@ -201,7 +210,7 @@ if ($uniqueData.Count -lt 10) {
 }
 
 # ================================
-# SAVE FILES
+# SAVE
 # ================================
 $uniqueData | Out-File -Encoding ASCII $outputFile
 $uniqueData.Count | Out-File -Encoding ASCII $countFile
@@ -220,17 +229,22 @@ Write-Host "⏱️ Total :" ($totalEnd - $globalStart).TotalSeconds "sec"
 Write-Host "========================================="
 
 # ================================
-# GIT PUSH
+# GIT PUSH (SMART)
 # ================================
 if (Test-Path ".git") {
 
     Write-Host "🚀 Push Git..."
 
     git add .
-    git commit -m "Auto update blacklist ($(Get-Date -Format 'yyyy-MM-dd HH:mm'))" | Out-Null
-    git push
 
-    Write-Host "✅ Push OK"
+    if (-not (git diff --cached --quiet)) {
+        git commit -m "Auto update blacklist ($(Get-Date -Format 'yyyy-MM-dd HH:mm'))" | Out-Null
+        git push
+        Write-Host "✅ Push OK"
+    }
+    else {
+        Write-Host "ℹ️ Aucun changement"
+    }
 }
 else {
     Write-Host "❌ Pas de repo git"
