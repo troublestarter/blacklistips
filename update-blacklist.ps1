@@ -15,7 +15,7 @@ $countFile  = Join-Path $repoDir "count.txt"
 $listFile   = Join-Path $repoDir "ExternalLists.txt"
 $whitelistFile = Join-Path $repoDir "whitelist.txt"
 
-$enableCIDROptimization = $false
+$enableCIDROptimization = $true
 
 # ================================
 # FUNCTIONS
