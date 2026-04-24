@@ -13,7 +13,7 @@ $repoDir    = Get-Location
 $outputFile = Join-Path $repoDir "blacklist.txt"
 $countFile  = Join-Path $repoDir "count.txt"
 $listFile   = Join-Path $repoDir "ExternalLists.txt"
-$whitelistFile = Join-Path $repoDir "whitelist.txt"
+$whitelistFile = Join-Path $repoDir "custom-whitelist.txt"
 
 $enableCIDROptimization = $true
 
