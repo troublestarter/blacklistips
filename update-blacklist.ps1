@@ -14,18 +14,21 @@ $outputFile = Join-Path $repoDir "blacklist.txt"
 $countFile  = Join-Path $repoDir "count.txt"
 $listFile   = Join-Path $repoDir "ExternalLists.txt"
 
+# 🔥 Activer / désactiver optimisation CIDR
+$enableCIDROptimization = $true
+
 # ================================
 # INIT
 # ================================
 Write-Host "========================================="
-Write-Host "🚀 START SCRIPT (FINAL CLEAN + COMMENTS)"
+Write-Host "🚀 START SCRIPT (FINAL + CIDR OPTIONAL)"
 Write-Host "📁 Repo :" $repoDir
 Write-Host "========================================="
 
 $globalStart = Get-Date
 
 # ================================
-# LOAD URL LIST (WITH COMMENTS SUPPORT)
+# LOAD URL LIST
 # ================================
 Write-Host "📥 Chargement des sources..."
 
@@ -38,18 +41,13 @@ $urls = [System.IO.File]::ReadAllLines($listFile) |
     ForEach-Object {
         $line = $_.Trim()
 
-        # ignorer vide
         if (-not $line) { return }
-
-        # ignorer commentaires complets
         if ($line -match '^\s*#') { return }
 
-        # enlever commentaire inline
         if ($line -match '#') {
             $line = ($line -split '#')[0].Trim()
         }
 
-        # garder uniquement URL valides
         if ($line -match '^https?://') {
             $line
         }
@@ -80,7 +78,6 @@ $results = $urls | ForEach-Object -Parallel {
             $clean = $line.Trim()
 
             if (-not $clean) { continue }
-
             if ($clean.StartsWith("#") -or $clean.StartsWith(";")) { continue }
 
             if ($clean -match ';') {
@@ -112,7 +109,7 @@ $results = $urls | ForEach-Object -Parallel {
 $downloadEnd = Get-Date
 
 # ================================
-# STATS
+# STATS PAR SOURCE
 # ================================
 Write-Host "=============================="
 Write-Host "📊 STATS PAR SOURCE"
@@ -136,7 +133,64 @@ $uniqueData = $tempData |
     Where-Object { $_ -ne "" } |
     Sort-Object -Unique
 
-Write-Host "📊 Total final :" $uniqueData.Count
+Write-Host "📊 Total avant CIDR :" $uniqueData.Count
+
+# ================================
+# CIDR OPTIMIZATION (OPTIONNEL)
+# ================================
+if ($enableCIDROptimization) {
+
+    Write-Host "🔍 Optimisation IP incluses dans CIDR..."
+
+    function IPToInt($ip) {
+        $b = $ip.Split('.') | ForEach-Object {[int]$_}
+        return ($b[0] -shl 24) -bor ($b[1] -shl 16) -bor ($b[2] -shl 8) -bor $b[3]
+    }
+
+    function CIDRToRange($cidr) {
+        $parts = $cidr -split "/"
+        $ip = $parts[0]
+        $prefix = [int]$parts[1]
+
+        $base = IPToInt $ip
+        $size = [math]::Pow(2, (32 - $prefix))
+
+        return @{
+            start = $base
+            end   = $base + $size - 1
+        }
+    }
+
+    $cidrs = $uniqueData | Where-Object { $_ -match "/" }
+    $ips   = $uniqueData | Where-Object { $_ -notmatch "/" }
+
+    Write-Host "📊 IP :" $ips.Count " | CIDR :" $cidrs.Count
+
+    $cidrRanges = $cidrs | ForEach-Object { CIDRToRange $_ } |
+        Sort-Object start
+
+    $filteredIPs = foreach ($ip in $ips) {
+
+        $ipInt = IPToInt $ip
+        $match = $false
+
+        foreach ($range in $cidrRanges) {
+
+            if ($ipInt -lt $range.start) { break }
+
+            if ($ipInt -le $range.end) {
+                $match = $true
+                break
+            }
+        }
+
+        if (-not $match) { $ip }
+    }
+
+    $uniqueData = $filteredIPs + $cidrs
+
+    Write-Host "📊 Total après CIDR :" $uniqueData.Count
+}
 
 # ================================
 # VALIDATION
