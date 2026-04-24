@@ -15,7 +15,7 @@ $countFile  = Join-Path $repoDir "count.txt"
 $listFile   = Join-Path $repoDir "ExternalLists.txt"
 $whitelistFile = Join-Path $repoDir "whitelist.txt"
 
-$enableCIDROptimization = $true
+$enableCIDROptimization = $false
 
 # ================================
 # FUNCTIONS
@@ -126,10 +126,10 @@ $results = $urls | ForEach-Object -Parallel {
 } -ThrottleLimit 2
 
 # ================================
-# STATS PAR SOURCE
+# STATS PAR SOURCE (BLACKLIST)
 # ================================
 Write-Host "=============================="
-Write-Host "📊 STATS PAR SOURCE"
+Write-Host "📊 STATS PAR SOURCE (BLACKLIST)"
 Write-Host "=============================="
 
 $results | Sort-Object Count -Descending | ForEach-Object {
@@ -162,11 +162,13 @@ Write-Host "📊 IP :" $ipCount
 Write-Host "📊 CIDR :" $cidrCount
 
 # ================================
-# WHITELIST
+# WHITELIST + STATS
 # ================================
 if (Test-Path $whitelistFile) {
 
-    Write-Host "🛡️ Application whitelist..."
+    Write-Host "=============================="
+    Write-Host "📊 STATS PAR SOURCE (WHITELIST)"
+    Write-Host "=============================="
 
     $whitelist = [System.IO.File]::ReadAllLines($whitelistFile) |
         ForEach-Object { $_.Trim() } |
@@ -174,6 +176,14 @@ if (Test-Path $whitelistFile) {
 
     $wlCIDR = $whitelist | Where-Object { $_ -match "/" }
     $wlIP   = $whitelist | Where-Object { $_ -notmatch "/" }
+
+    Write-Host "📊 Total whitelist :" $whitelist.Count
+    Write-Host "📊 IP whitelist :" $wlIP.Count
+    Write-Host "📊 CIDR whitelist :" $wlCIDR.Count
+
+    Write-Host "------------------------------"
+    Write-Host "🛡️ Application whitelist..."
+    Write-Host "------------------------------"
 
     $wlRanges = $wlCIDR | ForEach-Object { CIDRToRange $_ }
 
@@ -204,7 +214,6 @@ if (Test-Path $whitelistFile) {
 
     Write-Host "📊 Total après whitelist :" $uniqueData.Count
 
-    # stats post WL
     $ipCount   = ($uniqueData | Where-Object { $_ -notmatch "/" }).Count
     $cidrCount = ($uniqueData | Where-Object { $_ -match "/" }).Count
 
