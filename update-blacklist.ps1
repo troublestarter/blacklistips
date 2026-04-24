@@ -18,14 +18,14 @@ $listFile   = Join-Path $repoDir "ExternalLists.txt"
 # INIT
 # ================================
 Write-Host "========================================="
-Write-Host "🚀 START SCRIPT (FINAL + STATS)"
+Write-Host "🚀 START SCRIPT (FINAL CLEAN + COMMENTS)"
 Write-Host "📁 Repo :" $repoDir
 Write-Host "========================================="
 
 $globalStart = Get-Date
 
 # ================================
-# LOAD URL LIST
+# LOAD URL LIST (WITH COMMENTS SUPPORT)
 # ================================
 Write-Host "📥 Chargement des sources..."
 
@@ -35,17 +35,30 @@ if (-not (Test-Path $listFile)) {
 }
 
 $urls = [System.IO.File]::ReadAllLines($listFile) |
-    ForEach-Object { $_.Trim() } |
-    Where-Object {
-        $_ -ne "" -and
-        -not $_.StartsWith("#") -and
-        $_ -match '^https?://'
+    ForEach-Object {
+        $line = $_.Trim()
+
+        # ignorer vide
+        if (-not $line) { return }
+
+        # ignorer commentaires complets
+        if ($line -match '^\s*#') { return }
+
+        # enlever commentaire inline
+        if ($line -match '#') {
+            $line = ($line -split '#')[0].Trim()
+        }
+
+        # garder uniquement URL valides
+        if ($line -match '^https?://') {
+            $line
+        }
     }
 
 Write-Host "🔗 Nombre de sources :" $urls.Count
 
 # ================================
-# DOWNLOAD + PARSE + STATS
+# DOWNLOAD + PARSE
 # ================================
 Write-Host "📥 Téléchargement..."
 
@@ -83,16 +96,14 @@ $results = $urls | ForEach-Object -Parallel {
         }
 
         Write-Host "✅ OK ($($result.Count))"
-
     }
     catch {
         Write-Host "⚠️ Erreur : $url"
     }
 
-    # retourner objet structuré
     [PSCustomObject]@{
-        Url  = $url
-        Data = $result
+        Url   = $url
+        Data  = $result
         Count = $result.Count
     }
 
@@ -101,7 +112,7 @@ $results = $urls | ForEach-Object -Parallel {
 $downloadEnd = Get-Date
 
 # ================================
-# STATS PAR SOURCE
+# STATS
 # ================================
 Write-Host "=============================="
 Write-Host "📊 STATS PAR SOURCE"
@@ -112,7 +123,7 @@ $results | Sort-Object Count -Descending | ForEach-Object {
 }
 
 # ================================
-# FLATTEN DATA
+# FLATTEN PROPRE
 # ================================
 $tempData = foreach ($r in $results) { $r.Data }
 
