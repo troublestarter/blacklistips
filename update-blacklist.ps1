@@ -51,10 +51,10 @@ $globalStart = Get-Date
 # ================================
 # LOAD URL LIST
 # ================================
-Write-Host "📥 Chargement des sources..."
+Write-Host "📥 Loading sources..."
 
 if (-not (Test-Path $listFile)) {
-    Write-Host "❌ ExternalLists.txt introuvable"
+    Write-Host "❌ ExternalLists.txt not found"
     exit
 }
 
@@ -76,12 +76,12 @@ foreach ($line in [System.IO.File]::ReadAllLines($listFile)) {
     }
 }
 
-Write-Host "🔗 Nombre de sources :" $urls.Count
+Write-Host "🔗 Number of sources :" $urls.Count
 
 # ================================
 # DOWNLOAD + PARSE
 # ================================
-Write-Host "📥 Téléchargement..."
+Write-Host "📥 Downloading..."
 
 $results = $urls | ForEach-Object -Parallel {
 
@@ -114,7 +114,7 @@ $results = $urls | ForEach-Object -Parallel {
 
     }
     catch {
-        Write-Host "⚠️ Erreur : $url"
+        Write-Host "⚠️ Error : $url"
     }
 
     [PSCustomObject]@{
@@ -126,10 +126,10 @@ $results = $urls | ForEach-Object -Parallel {
 } -ThrottleLimit 2
 
 # ================================
-# STATS PAR SOURCE (BLACKLIST)
+# STATS BY SOURCE (BLACKLIST)
 # ================================
 Write-Host "=============================="
-Write-Host "📊 STATS PAR SOURCE (BLACKLIST)"
+Write-Host "📊 STATS BY SOURCE (BLACKLIST)"
 Write-Host "=============================="
 
 $results | Sort-Object Count -Descending | ForEach-Object {
@@ -144,16 +144,16 @@ $tempData = foreach ($r in $results) { $r.Data }
 # ================================
 # CLEAN + DEDUP
 # ================================
-Write-Host "🧹 Nettoyage + suppression des doublons..."
+Write-Host "🧹 Cleanup + duplicate removal..."
 
 $uniqueData = $tempData |
     Where-Object { $_ -ne "" } |
     Sort-Object -Unique
 
-Write-Host "📊 Total avant whitelist :" $uniqueData.Count
+Write-Host "📊 Total before whitelist :" $uniqueData.Count
 
 # ================================
-# STATS AVANT WHITELIST
+# STATS BEFORE WHITELIST
 # ================================
 $ipCount   = ($uniqueData | Where-Object { $_ -notmatch "/" }).Count
 $cidrCount = ($uniqueData | Where-Object { $_ -match "/" }).Count
@@ -167,7 +167,7 @@ Write-Host "📊 CIDR :" $cidrCount
 if (Test-Path $whitelistFile) {
 
     Write-Host "=============================="
-    Write-Host "📊 STATS PAR SOURCE (WHITELIST)"
+    Write-Host "📊 STATS BY SOURCE (WHITELIST)"
     Write-Host "=============================="
 
     $whitelist = [System.IO.File]::ReadAllLines($whitelistFile) |
@@ -178,13 +178,13 @@ if (Test-Path $whitelistFile) {
     $wlIP   = $whitelist | Where-Object { $_ -notmatch "/" }
 
     $fileName = [System.IO.Path]::GetFileName($whitelistFile)
-    Write-Host ("{0} → {1} entrées" -f $fileName, $whitelist.Count)
+    Write-Host ("{0} → {1} entries" -f $fileName, $whitelist.Count)
 
     Write-Host "📊 IP whitelist :" $wlIP.Count
     Write-Host "📊 CIDR whitelist :" $wlCIDR.Count
 
     Write-Host "------------------------------"
-    Write-Host "🛡️ Application whitelist..."
+    Write-Host "🛡️ Applying whitelist..."
     Write-Host "------------------------------"
 
     $wlRanges = $wlCIDR | ForEach-Object { CIDRToRange $_ }
@@ -214,7 +214,7 @@ if (Test-Path $whitelistFile) {
 
     $uniqueData = $filtered
 
-    Write-Host "📊 Total après whitelist :" $uniqueData.Count
+    Write-Host "📊 Total after whitelist :" $uniqueData.Count
 }
 
 # ================================
@@ -222,7 +222,7 @@ if (Test-Path $whitelistFile) {
 # ================================
 if ($enableCIDROptimization) {
 
-    Write-Host "🔍 Optimisation CIDR activée"
+    Write-Host "🔍 CIDR optimization enabled"
 
     $cidrs = $uniqueData | Where-Object { $_ -match "/" }
     $ips   = $uniqueData | Where-Object { $_ -notmatch "/" }
@@ -246,7 +246,7 @@ if ($enableCIDROptimization) {
 
     $uniqueData = $filteredIPs + $cidrs
 
-    Write-Host "📊 Total après CIDR :" $uniqueData.Count
+    Write-Host "📊 Total after CIDR :" $uniqueData.Count
 }
 
 # ================================
@@ -267,22 +267,22 @@ if (Test-Path $countFile) {
 if ($history.Count -gt 0) {
     $prev = ($history[0] -split '\|')[0].Trim()
     $delta = $uniqueData.Count - [int]$prev
-    Write-Host "📈 Delta depuis dernier run :" $delta
+    Write-Host "📈 Delta since last run :" $delta
 }
 
 $history = @($currentLine) + $history
 $history = $history | Select-Object -First 50
 $history | Out-File -Encoding ASCII $countFile
 
-Write-Host "✅ blacklist.txt généré"
-Write-Host "📄 count.txt mis à jour (historique)"
+Write-Host "✅ blacklist.txt generated"
+Write-Host "📄 count.txt updates (historical)"
 
 # ================================
 # GIT PUSH
 # ================================
 if (Test-Path ".git") {
 
-    Write-Host "🚀 Push Git..."
+    Write-Host "🚀 Git Push..."
 
     git add .
 
@@ -292,6 +292,6 @@ if (Test-Path ".git") {
         Write-Host "✅ Push OK"
     }
     else {
-        Write-Host "ℹ️ Aucun changement"
+        Write-Host "ℹ️ No change"
     }
 }
