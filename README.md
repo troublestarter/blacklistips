@@ -13,16 +13,16 @@
 
 ## 📑 Table of Contents
 
-- 📌 Description
-- 🚀 Quick Usage
-- ⚙️ How it works
-- ⚙️ CIDR Optimization Option
-- 📂 Repository Content
-- 📡 Sources
-- 🔌 Compatibility
-- ⚠️ Disclaimer
-- 🤝 Contribution
-- 📄 License
+- [📌 Description](#-description)
+- [🚀 Quick Usage](#-quick-usage)
+- [⚙️ How it works](#️-how-it-works)
+- [⚙️ CIDR Optimization Option](#️-cidr-optimization-option)
+- [📂 Repository Content](#-repository-content)
+- [📡 Sources](#-sources)
+- [🔌 Compatibility](#-compatibility)
+- [⚠️ Disclaimer](#️-disclaimer)
+- [🤝 Contribution](#-contribution)
+- [📄 License](#-license)
 
 ---
 
@@ -66,7 +66,9 @@ The PowerShell script (`update-blacklist.ps1`) is optional and used to:
 
 ## ⚙️ CIDR Optimization Option
 
+```powershell
 $enableCIDROptimization = $false
+```
 
 - OFF → fast, keeps IP + CIDR (recommended, no impact on firewall efficiency)
 - ON → removes IP included in CIDR (slower, minimal gain)
@@ -123,16 +125,16 @@ GPL v3
 
 ## 📑 Sommaire
 
-- 📌 Description
-- 🚀 Utilisation rapide
-- ⚙️ Fonctionnement
-- ⚙️ Option CIDR
-- 📂 Contenu
-- 📡 Sources
-- 🔌 Compatibilité
-- ⚠️ Avertissement
-- 🤝 Contribution
-- 📄 Licence
+- [📌 Description](#-description-1)
+- [🚀 Utilisation rapide](#-utilisation-rapide)
+- [⚙️ Fonctionnement](#️-fonctionnement)
+- [⚙️ Option CIDR](#️-option-cidr)
+- [📂 Contenu](#-contenu)
+- [📡 Sources](#-sources-1)
+- [🔌 Compatibilité](#-compatibilité-1)
+- [⚠️ Avertissement](#️-avertissement)
+- [🤝 Contribution](#-contribution-1)
+- [📄 Licence](#-licence-1)
 
 ---
 
@@ -169,7 +171,9 @@ Le script PowerShell sert uniquement à générer la liste :
 
 ## ⚙️ Option CIDR
 
+```powershell
 $enableCIDROptimization = $false
+```
 
 - OFF → rapide, conserve IP + CIDR (recommandé)
 - ON → supprime les IP incluses dans des CIDR (plus lent)
