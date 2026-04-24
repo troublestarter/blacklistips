@@ -9,35 +9,53 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
 # ================================
 # CONFIG
 # ================================
-$externalListUrl = "https://raw.githubusercontent.com/troublestarter/blacklistips/main/ExternalLists.txt"
-
-$repoDir = Get-Location
+$repoDir    = Get-Location
 $outputFile = Join-Path $repoDir "blacklist.txt"
-$countFile = Join-Path $repoDir "count.txt"
+$countFile  = Join-Path $repoDir "count.txt"
+$listFile   = Join-Path $repoDir "ExternalLists.txt"
+
+# ================================
+# FUNCTION : IP IN CIDR
+# ================================
+function Test-IPInCIDR {
+    param ($ip, $cidr)
+
+    $parts = $cidr -split "/"
+    $network = $parts[0]
+    $prefix = [int]$parts[1]
+
+    $ipBytes  = $ip.Split('.')  | ForEach-Object {[int]$_}
+    $netBytes = $network.Split('.') | ForEach-Object {[int]$_}
+
+    $ipInt  = ($ipBytes[0] -shl 24) -bor ($ipBytes[1] -shl 16) -bor ($ipBytes[2] -shl 8) -bor $ipBytes[3]
+    $netInt = ($netBytes[0] -shl 24) -bor ($netBytes[1] -shl 16) -bor ($netBytes[2] -shl 8) -bor $netBytes[3]
+
+    $mask = [uint32]::MaxValue -shl (32 - $prefix)
+
+    return ($ipInt -band $mask) -eq ($netInt -band $mask)
+}
 
 # ================================
 # INIT
 # ================================
 Write-Host "========================================="
-Write-Host "🚀 START SCRIPT (IP + CIDR + COUNT)"
-Write-Host "📁 Repo dir :" $repoDir
+Write-Host "🚀 START SCRIPT (FINAL OPTIMIZED)"
+Write-Host "📁 Repo :" $repoDir
 Write-Host "========================================="
 
 $globalStart = Get-Date
 
 # ================================
-# GET URL LIST
+# LOAD URL LIST
 # ================================
-Write-Host "📥 Récupération des URLs (local)..."
+Write-Host "📥 Chargement des sources..."
 
-$localFile = Join-Path (Get-Location) "ExternalLists.txt"
-
-if (-not (Test-Path $localFile)) {
+if (-not (Test-Path $listFile)) {
     Write-Host "❌ ExternalLists.txt introuvable"
     exit
 }
 
-$urls = Get-Content $localFile |
+$urls = [System.IO.File]::ReadAllLines($listFile) |
     ForEach-Object { $_.Trim() } |
     Where-Object {
         $_ -ne "" -and
@@ -47,13 +65,10 @@ $urls = Get-Content $localFile |
 
 Write-Host "🔗 Nombre de sources :" $urls.Count
 
-# DEBUG (optionnel)
-$urls | ForEach-Object { Write-Host "→ $_" }
-
 # ================================
-# DOWNLOAD (PARALLEL x2)
+# DOWNLOAD + PARSE
 # ================================
-Write-Host "📥 Téléchargement (max 2 en parallèle)..."
+Write-Host "📥 Téléchargement..."
 
 $downloadStart = Get-Date
 
@@ -69,19 +84,29 @@ $tempData = $urls | ForEach-Object -Parallel {
         $content = $wc.DownloadString($url)
 
         foreach ($line in $content -split "`n") {
+
             $clean = $line.Trim()
 
-            if (-not $clean -or $clean.StartsWith("#")) {
-                continue
+            if (-not $clean) { continue }
+
+            # commentaires
+            if ($clean.StartsWith("#") -or $clean.StartsWith(";")) { continue }
+
+            # enlever après ;
+            if ($clean -match ';') {
+                $clean = ($clean -split ';')[0].Trim()
             }
 
-            if ($clean -match '^\d{1,3}(\.\d{1,3}){3}$' -or
-                $clean -match '^\d{1,3}(\.\d{1,3}){3}/\d{1,2}$') {
+            # IP ou CIDR
+            if (
+                $clean -match '^\d{1,3}(\.\d{1,3}){3}$' -or
+                $clean -match '^\d{1,3}(\.\d{1,3}){3}/\d{1,2}$'
+            ) {
                 [void]$result.Add($clean)
             }
         }
 
-        Write-Host "✅ OK : $url"
+        Write-Host "✅ OK"
     }
     catch {
         Write-Host "⚠️ Erreur : $url"
@@ -98,19 +123,44 @@ $downloadEnd = Get-Date
 # ================================
 Write-Host "🧹 Nettoyage..."
 
-$cleanStart = Get-Date
-
 $uniqueData = $tempData |
     Where-Object { $_ -ne "" } |
     Sort-Object -Unique
 
-$cleanEnd = Get-Date
+# ================================
+# REMOVE IP INCLUDED IN CIDR
+# ================================
+Write-Host "🔍 Suppression IP incluses dans CIDR..."
+
+$cidrs = $uniqueData | Where-Object { $_ -match "/" }
+$ips   = $uniqueData | Where-Object { $_ -notmatch "/" }
+
+$filteredIPs = @()
+
+foreach ($ip in $ips) {
+    $inside = $false
+
+    foreach ($cidr in $cidrs) {
+        if (Test-IPInCIDR $ip $cidr) {
+            $inside = $true
+            break
+        }
+    }
+
+    if (-not $inside) {
+        $filteredIPs += $ip
+    }
+}
+
+$uniqueData = $filteredIPs + $cidrs
+
+Write-Host "📊 Après optimisation :" $uniqueData.Count "entrées"
 
 # ================================
 # VALIDATION
 # ================================
 if ($uniqueData.Count -lt 10) {
-    Write-Host "❌ ERREUR : blacklist trop petite → abort"
+    Write-Host "❌ ERREUR : blacklist trop petite"
     exit
 }
 
@@ -118,12 +168,9 @@ if ($uniqueData.Count -lt 10) {
 # SAVE FILES
 # ================================
 $uniqueData | Out-File -Encoding ASCII $outputFile
-
-# 🔥 COUNT FILE
 $uniqueData.Count | Out-File -Encoding ASCII $countFile
 
 Write-Host "✅ blacklist.txt généré"
-Write-Host "📊 Total entrées :" $uniqueData.Count
 Write-Host "📄 count.txt généré"
 
 # ================================
@@ -133,7 +180,6 @@ $totalEnd = Get-Date
 
 Write-Host "========================================="
 Write-Host "⏱️ Download :" ($downloadEnd - $downloadStart).TotalSeconds "sec"
-Write-Host "⏱️ Clean :" ($cleanEnd - $cleanStart).TotalSeconds "sec"
 Write-Host "⏱️ Total :" ($totalEnd - $globalStart).TotalSeconds "sec"
 Write-Host "========================================="
 
@@ -141,11 +187,12 @@ Write-Host "========================================="
 # GIT PUSH
 # ================================
 if (Test-Path ".git") {
-    Write-Host "🚀 Push vers GitHub..."
 
-git add .
-git commit -m "Auto update blacklist ($(Get-Date -Format 'yyyy-MM-dd HH:mm'))" | Out-Null
-git push
+    Write-Host "🚀 Push Git..."
+
+    git add .
+    git commit -m "Auto update blacklist ($(Get-Date -Format 'yyyy-MM-dd HH:mm'))" | Out-Null
+    git push
 
     Write-Host "✅ Push OK"
 }
