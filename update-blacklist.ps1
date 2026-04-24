@@ -43,7 +43,7 @@ function CIDRToRange($cidr) {
 # INIT
 # ================================
 Write-Host "========================================="
-Write-Host "🚀 START SCRIPT (FULL + STATS)"
+Write-Host "🚀 START SCRIPT (FULL + STATS + HISTORY)"
 Write-Host "========================================="
 
 $globalStart = Get-Date
@@ -162,7 +162,7 @@ Write-Host "📊 IP :" $ipCount
 Write-Host "📊 CIDR :" $cidrCount
 
 # ================================
-# WHITELIST + STATS
+# WHITELIST
 # ================================
 if (Test-Path $whitelistFile) {
 
@@ -177,7 +177,9 @@ if (Test-Path $whitelistFile) {
     $wlCIDR = $whitelist | Where-Object { $_ -match "/" }
     $wlIP   = $whitelist | Where-Object { $_ -notmatch "/" }
 
-    Write-Host "📊 Total whitelist :" $whitelist.Count
+    $fileName = [System.IO.Path]::GetFileName($whitelistFile)
+    Write-Host ("{0} → {1} entrées" -f $fileName, $whitelist.Count)
+
     Write-Host "📊 IP whitelist :" $wlIP.Count
     Write-Host "📊 CIDR whitelist :" $wlCIDR.Count
 
@@ -213,12 +215,6 @@ if (Test-Path $whitelistFile) {
     $uniqueData = $filtered
 
     Write-Host "📊 Total après whitelist :" $uniqueData.Count
-
-    $ipCount   = ($uniqueData | Where-Object { $_ -notmatch "/" }).Count
-    $cidrCount = ($uniqueData | Where-Object { $_ -match "/" }).Count
-
-    Write-Host "📊 (POST-WL) IP :" $ipCount
-    Write-Host "📊 (POST-WL) CIDR :" $cidrCount
 }
 
 # ================================
@@ -252,18 +248,34 @@ if ($enableCIDROptimization) {
 
     Write-Host "📊 Total après CIDR :" $uniqueData.Count
 }
-else {
-    Write-Host "ℹ️ Optimisation CIDR désactivée"
-}
 
 # ================================
-# SAVE
+# SAVE FILES
 # ================================
 $uniqueData | Out-File -Encoding ASCII $outputFile
-$uniqueData.Count | Out-File -Encoding ASCII $countFile
+
+# ================================
+# HISTORY + DELTA
+# ================================
+$currentLine = "{0} | {1}" -f $uniqueData.Count, (Get-Date -Format "yyyy-MM-dd HH:mm")
+
+$history = @()
+if (Test-Path $countFile) {
+    $history = Get-Content $countFile
+}
+
+if ($history.Count -gt 0) {
+    $prev = ($history[0] -split '\|')[0].Trim()
+    $delta = $uniqueData.Count - [int]$prev
+    Write-Host "📈 Delta depuis dernier run :" $delta
+}
+
+$history = @($currentLine) + $history
+$history = $history | Select-Object -First 50
+$history | Out-File -Encoding ASCII $countFile
 
 Write-Host "✅ blacklist.txt généré"
-Write-Host "📄 count.txt généré"
+Write-Host "📄 count.txt mis à jour (historique)"
 
 # ================================
 # GIT PUSH
