@@ -11,15 +11,15 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
 # ================================
 $externalListUrl = "https://raw.githubusercontent.com/troublestarter/blacklistips/main/ExternalLists.txt"
 
-$tempDir = [System.IO.Path]::GetTempPath()
-$outputFile = Join-Path $tempDir "blacklist.txt"
+# IMPORTANT : fichier DIRECTEMENT dans le repo
+$outputFile = Join-Path (Get-Location) "blacklist.txt"
 
 # ================================
 # INIT
 # ================================
 Write-Host "========================================="
-Write-Host "🚀 START SCRIPT (PS7 PARALLEL)"
-Write-Host "📁 Temp dir :" $tempDir
+Write-Host "🚀 START SCRIPT (FINAL)"
+Write-Host "📁 Repo dir :" (Get-Location)
 Write-Host "========================================="
 
 $globalStart = Get-Date
@@ -29,7 +29,12 @@ $globalStart = Get-Date
 # ================================
 Write-Host "📥 Récupération des URLs..."
 
-$urlsContent = (New-Object System.Net.WebClient).DownloadString($externalListUrl)
+try {
+    $urlsContent = (New-Object System.Net.WebClient).DownloadString($externalListUrl)
+} catch {
+    Write-Host "❌ Impossible de récupérer ExternalLists.txt"
+    exit
+}
 
 $urls = $urlsContent -split "`n" |
     ForEach-Object { $_.Trim() } |
@@ -45,6 +50,7 @@ Write-Host "📥 Téléchargement (max 2 en parallèle)..."
 $downloadStart = Get-Date
 
 $tempData = $urls | ForEach-Object -Parallel {
+
     $url = $_
     Write-Host "→ $url"
 
@@ -56,6 +62,7 @@ $tempData = $urls | ForEach-Object -Parallel {
 
         foreach ($line in $content -split "`n") {
             $clean = $line.Trim()
+
             if ($clean -and -not $clean.StartsWith("#")) {
                 [void]$result.Add($clean)
             }
@@ -87,7 +94,15 @@ $uniqueData = $tempData |
 $cleanEnd = Get-Date
 
 # ================================
-# SAVE FILE
+# VALIDATION (IMPORTANT)
+# ================================
+if ($uniqueData.Count -lt 10) {
+    Write-Host "❌ ERREUR : blacklist trop petite → abort push"
+    exit
+}
+
+# ================================
+# SAVE FILE (DIRECT REPO)
 # ================================
 $uniqueData | Out-File -Encoding ASCII $outputFile
 
@@ -106,12 +121,11 @@ Write-Host "⏱️ Total :" ($totalEnd - $globalStart).TotalSeconds "sec"
 Write-Host "========================================="
 
 # ================================
-# PUSH (SAFE SANS ELSE)
+# GIT PUSH
 # ================================
 if (Test-Path ".git") {
-    Write-Host "🚀 Repo détecté, push..."
 
-    Copy-Item $outputFile .\blacklist.txt -Force
+    Write-Host "🚀 Push vers GitHub..."
 
     git add blacklist.txt
     git commit -m "Auto update blacklist ($(Get-Date -Format 'yyyy-MM-dd HH:mm'))" | Out-Null
@@ -119,7 +133,6 @@ if (Test-Path ".git") {
 
     Write-Host "✅ Push OK"
 }
-
-if (-not (Test-Path ".git")) {
-    Write-Host "ℹ️ Pas de repo git → aucun push"
+else {
+    Write-Host "❌ Pas de repo git → aucun push"
 }
