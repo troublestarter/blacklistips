@@ -20,7 +20,6 @@
 - [⚙️ CIDR Optimization Option](#️-cidr-optimization-option)
 - [📂 Repository Content](#-repository-content)
 - [📡 Sources](#-sources)
-- [🔌 Compatibility](#-compatibility)
 - [⚠️ Disclaimer](#️-disclaimer)
 - [🤝 Contribution](#-contribution)
 - [📄 License](#-license)
@@ -105,15 +104,6 @@ See `ExternalLists.txt` for the full list of providers.
 
 ---
 
-## 🔌 Compatibility
-
-- firewalls (iptables, nftables…)
-- IDS / IPS systems
-- security scripts
-- Sophos XGS
-
----
-
 ## ⚠️ Disclaimer
 
 - false positives may occur  
@@ -148,7 +138,6 @@ GPL v3
 - [⚙️ Option CIDR](#️-option-cidr)
 - [📂 Contenu](#-contenu)
 - [📡 Sources](#-sources-1)
-- [🔌 Compatibilité](#-compatibilité-1)
 - [⚠️ Avertissement](#️-avertissement)
 - [🤝 Contribution](#-contribution-1)
 - [📄 Licence](#-licence-1)
@@ -224,15 +213,6 @@ $enableCIDROptimization = $false
 ## 📡 Sources
 
 Voir `ExternalLists.txt`
-
----
-
-## 🔌 Compatibilité
-
-- firewall  
-- IDS / IPS  
-- scripts sécurité  
-- Sophos XGS  
 
 ---
 
