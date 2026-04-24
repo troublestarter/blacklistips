@@ -131,9 +131,9 @@ Write-Host "========================================="
 if (Test-Path ".git") {
     Write-Host "🚀 Push vers GitHub..."
 
-    git add blacklist.txt count.txt
-    git commit -m "Auto update blacklist ($(Get-Date -Format 'yyyy-MM-dd HH:mm'))" | Out-Null
-    git push
+git add .
+git commit -m "Auto update blacklist ($(Get-Date -Format 'yyyy-MM-dd HH:mm'))" | Out-Null
+git push
 
     Write-Host "✅ Push OK"
 }
