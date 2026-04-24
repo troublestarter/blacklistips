@@ -15,31 +15,10 @@ $countFile  = Join-Path $repoDir "count.txt"
 $listFile   = Join-Path $repoDir "ExternalLists.txt"
 
 # ================================
-# FUNCTION : IP IN CIDR
-# ================================
-function Test-IPInCIDR {
-    param ($ip, $cidr)
-
-    $parts = $cidr -split "/"
-    $network = $parts[0]
-    $prefix = [int]$parts[1]
-
-    $ipBytes  = $ip.Split('.')  | ForEach-Object {[int]$_}
-    $netBytes = $network.Split('.') | ForEach-Object {[int]$_}
-
-    $ipInt  = ($ipBytes[0] -shl 24) -bor ($ipBytes[1] -shl 16) -bor ($ipBytes[2] -shl 8) -bor $ipBytes[3]
-    $netInt = ($netBytes[0] -shl 24) -bor ($netBytes[1] -shl 16) -bor ($netBytes[2] -shl 8) -bor $netBytes[3]
-
-    $mask = [uint32]::MaxValue -shl (32 - $prefix)
-
-    return ($ipInt -band $mask) -eq ($netInt -band $mask)
-}
-
-# ================================
 # INIT
 # ================================
 Write-Host "========================================="
-Write-Host "🚀 START SCRIPT (FINAL OPTIMIZED)"
+Write-Host "🚀 START SCRIPT (FINAL FAST)"
 Write-Host "📁 Repo :" $repoDir
 Write-Host "========================================="
 
@@ -128,30 +107,60 @@ $uniqueData = $tempData |
     Sort-Object -Unique
 
 # ================================
-# REMOVE IP INCLUDED IN CIDR
+# FAST CIDR OPTIMIZATION
 # ================================
-Write-Host "🔍 Suppression IP incluses dans CIDR..."
+Write-Host "🔍 Optimisation CIDR (rapide)..."
 
+# Convert IP → int
+function IPToInt($ip) {
+    $b = $ip.Split('.') | ForEach-Object {[int]$_}
+    return ($b[0] -shl 24) -bor ($b[1] -shl 16) -bor ($b[2] -shl 8) -bor $b[3]
+}
+
+# Convert CIDR → range
+function CIDRToRange($cidr) {
+    $parts = $cidr -split "/"
+    $ip = $parts[0]
+    $prefix = [int]$parts[1]
+
+    $base = IPToInt $ip
+    $size = [math]::Pow(2, (32 - $prefix))
+
+    return @{
+        start = $base
+        end   = $base + $size - 1
+    }
+}
+
+# Séparer
 $cidrs = $uniqueData | Where-Object { $_ -match "/" }
 $ips   = $uniqueData | Where-Object { $_ -notmatch "/" }
 
-$filteredIPs = @()
+# Préparer + trier
+$cidrRanges = $cidrs | ForEach-Object { CIDRToRange $_ } |
+    Sort-Object start
 
-foreach ($ip in $ips) {
-    $inside = $false
+# Filtrer IP (optimisé)
+$filteredIPs = foreach ($ip in $ips) {
 
-    foreach ($cidr in $cidrs) {
-        if (Test-IPInCIDR $ip $cidr) {
-            $inside = $true
+    $ipInt = IPToInt $ip
+    $match = $false
+
+    foreach ($range in $cidrRanges) {
+
+        # 🔥 optimisation clé
+        if ($ipInt -lt $range.start) { break }
+
+        if ($ipInt -le $range.end) {
+            $match = $true
             break
         }
     }
 
-    if (-not $inside) {
-        $filteredIPs += $ip
-    }
+    if (-not $match) { $ip }
 }
 
+# Merge final
 $uniqueData = $filteredIPs + $cidrs
 
 Write-Host "📊 Après optimisation :" $uniqueData.Count "entrées"
