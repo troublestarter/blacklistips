@@ -1,106 +1,221 @@
 # 🚫 Blacklist IPs
 
+> 🔄 Automatically updated threat intelligence feed (IP + CIDR)
+
+## 🌐 Languages
+
+- 🇬🇧 [English Version](#-english-version)
+- 🇫🇷 [Version Française](#-version-française)
+
+---
+
+# 🇬🇧 English Version
+
+## 📑 Table of Contents
+
+- 📌 Description
+- 🚀 Quick Usage
+- ⚙️ How it works
+- ⚙️ CIDR Optimization Option
+- 📂 Repository Content
+- 📡 Sources
+- 🔌 Compatibility
+- ⚠️ Disclaimer
+- 🤝 Contribution
+- 📄 License
+
+---
+
 ## 📌 Description
 
-Ce repository a pour objectif de centraliser et maintenir une ou plusieurs listes d'adresses IP bannies.
+This repository provides a centralized blacklist of IP addresses and CIDR ranges considered suspicious or malicious.
 
-Ces listes peuvent être utilisées pour :
-
-* renforcer la sécurité de serveurs
-* bloquer des comportements malveillants
-* partager des sources d’IPs à risque
-
-Cette liste est pleinement compatible avec le module **Third-Party threats Feed** des **Sophos XGS**
+Data is aggregated from multiple public sources, cleaned, deduplicated, and published in a simple and usable format.
 
 ---
 
-## ⚙️ Contenu
+## 🚀 Quick Usage
 
-Le dépôt contient différentes listes d’IP classées selon leur usage :
+👉 You **do NOT need the script** to use this project.
 
-* `blacklist.txt` → liste principale d’IP bannies
-* autres fichiers possibles selon les besoins :
+Simply use this URL:
 
-  * spam
-  * attaques (bruteforce, scans…)
-  * bots malveillants
+https://raw.githubusercontent.com/troublestarter/blacklistips/main/blacklist.txt
 
-* `ExternalLists.txt` → liste de projets externe concaténées dans le `blacklist.txt`
+**Current size:** ~406,000 entries
 
----
-
-## 🧠 Objectif
-
-Fournir une base simple, exploitable et mise à jour régulièrement pour :
-
-* administrateurs systèmes
-* développeurs
-* projets de sécurité
+Use it directly in:
+- firewalls
+- security tools
+- scripts
+- Sophos XGS (Third-Party Threat Feed compatible)
 
 ---
 
-## 🔄 Mise à jour
+## ⚙️ How it works
 
-Les listes peuvent être :
+The PowerShell script (`update-blacklist.ps1`) is optional and used to:
 
-* mises à jour régulièrement
-* enrichies par la communauté
-* nettoyées pour éviter les faux positifs
+- download external lists
+- clean data
+- deduplicate entries
+- generate `blacklist.txt`
+- push updates to GitHub
 
 ---
 
-## ⚠️ Avertissement
+## ⚙️ CIDR Optimization Option
 
-Les IP listées sont considérées comme suspectes ou malveillantes, mais :
+$enableCIDROptimization = $false
 
-* des erreurs sont possibles
-* certaines IP peuvent être dynamiques
+- OFF → fast, keeps IP + CIDR (recommended, no impact on firewall efficiency)
+- ON → removes IP included in CIDR (slower, minimal gain)
 
-👉 Utilisez ces listes avec discernement.
+---
+
+## 📂 Repository Content
+
+- blacklist.txt
+- count.txt
+- ExternalLists.txt
+- update-blacklist.ps1
+
+---
+
+## 📡 Sources
+
+See ExternalLists.txt for the full list of providers.
+
+---
+
+## 🔌 Compatibility
+
+- firewalls (iptables, nftables…)
+- IDS / IPS systems
+- security scripts
+- Sophos XGS
+
+---
+
+## ⚠️ Disclaimer
+
+- false positives may occur  
+- IPs may be dynamic  
+- depends on external sources  
+
+👉 Use with caution.
 
 ---
 
 ## 🤝 Contribution
 
-Les contributions sont les bienvenues :
+Pull Requests and Issues welcome
 
-* ajout de nouvelles IP
-* signalement d’erreurs
-* amélioration des listes
-* Fournir un fichier pleinement compatible avec le module **Third-Party threats Feed** des **Sophos XGS**
+---
 
-Merci de créer une **Pull Request**.
+## 📄 License
+
+GPL v3
+
+---
+
+# 🇫🇷 Version Française
+
+## 📑 Sommaire
+
+- 📌 Description
+- 🚀 Utilisation rapide
+- ⚙️ Fonctionnement
+- ⚙️ Option CIDR
+- 📂 Contenu
+- 📡 Sources
+- 🔌 Compatibilité
+- ⚠️ Avertissement
+- 🤝 Contribution
+- 📄 Licence
+
+---
+
+## 📌 Description
+
+Ce dépôt fournit une blacklist d’IP et de réseaux (CIDR) suspects ou malveillants.
+
+Les données sont agrégées à partir de sources publiques, nettoyées et dédupliquées.
+
+---
+
+## 🚀 Utilisation rapide
+
+👉 Aucun script nécessaire.
+
+Utilisez directement :
+
+https://raw.githubusercontent.com/troublestarter/blacklistips/main/blacklist.txt
+
+**Taille actuelle :** ~406 000 entrées
+
+---
+
+## ⚙️ Fonctionnement
+
+Le script PowerShell sert uniquement à générer la liste :
+
+- récupération des sources  
+- nettoyage  
+- déduplication  
+- publication  
+
+---
+
+## ⚙️ Option CIDR
+
+$enableCIDROptimization = $false
+
+- OFF → rapide, conserve IP + CIDR (recommandé)
+- ON → supprime les IP incluses dans des CIDR (plus lent)
+
+---
+
+## 📂 Contenu
+
+- blacklist.txt  
+- count.txt  
+- ExternalLists.txt  
+- update-blacklist.ps1  
+
+---
+
+## 📡 Sources
+
+Voir ExternalLists.txt
+
+---
+
+## 🔌 Compatibilité
+
+- firewall  
+- IDS / IPS  
+- scripts sécurité  
+- Sophos XGS  
+
+---
+
+## ⚠️ Avertissement
+
+- faux positifs possibles  
+- IP dynamiques  
+- dépend des sources  
+
+👉 Utilisation avec discernement
+
+---
+
+## 🤝 Contribution
+
+Issues / PR bienvenues
 
 ---
 
 ## 📄 Licence
 
-**GPL v3**
-Free pour la vie
-
----
-
-## 🚀 Exemple d’utilisation
-
-Blocage simple sous Linux (iptables) :
-
-```
-for ip in $(cat blacklist.txt); do
-  iptables -A INPUT -s $ip -j DROP
-done
-```
-
-Utiliser dans le module **Third-Party threats Feed** des **Sophos XGS**
-
-```
-PROTECT -> ACTIVE THREAT RESPONSE -> THIRD PARTY THREAT FEEDS -> ADD
-```
-<img width="676" height="452" alt="image" src="https://github.com/user-attachments/assets/71d59ab3-c5de-4486-9ff4-9eaea701e340" />
-
-Indiquer l'URL : https://raw.githubusercontent.com/troublestarter/blacklistips/refs/heads/main/blacklist.txt
-
----
-
-## 📬 Contact
-
-Pour toute question, problème ou réclamation et exclusion, utilisez les **Issues** du repository.
+GPL v3

@@ -15,7 +15,7 @@ $countFile  = Join-Path $repoDir "count.txt"
 $listFile   = Join-Path $repoDir "ExternalLists.txt"
 
 # 🔥 Activer / désactiver optimisation CIDR
-$enableCIDROptimization = $true
+$enableCIDROptimization = $false
 
 # ================================
 # INIT
