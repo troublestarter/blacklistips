@@ -61,6 +61,10 @@ https://raw.githubusercontent.com/troublestarter/blacklistips/main/blacklist.txt
 
 Go to **Protect → Active Threat Response → Third-Party Threat Feeds** and add a new source.
 
+<img width="677" height="425" alt="image" src="https://github.com/user-attachments/assets/4f9d1a1b-343a-46fd-9eaf-ace781c69fe9" />
+
+<img width="1490" height="674" alt="image" src="https://github.com/user-attachments/assets/e073473e-6b07-4c91-be24-8cca66d1c4ce" />
+
 ---
 
 ## ⚙️ Your own Usage with the script
@@ -179,6 +183,10 @@ https://raw.githubusercontent.com/troublestarter/blacklistips/main/blacklist.txt
 
 Puis allez dans :  
 **Protect → Active Threat Response → Third-Party Threat Feeds**
+
+<img width="677" height="425" alt="image" src="https://github.com/user-attachments/assets/4f9d1a1b-343a-46fd-9eaf-ace781c69fe9" />
+
+<img width="1490" height="674" alt="image" src="https://github.com/user-attachments/assets/e073473e-6b07-4c91-be24-8cca66d1c4ce" />
 
 ---
 
