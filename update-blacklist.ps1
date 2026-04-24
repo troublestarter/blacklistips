@@ -28,15 +28,27 @@ $globalStart = Get-Date
 # ================================
 # GET URL LIST
 # ================================
-Write-Host "📥 Récupération des URLs..."
+Write-Host "📥 Récupération des URLs (local)..."
 
-$urlsContent = (New-Object System.Net.WebClient).DownloadString($externalListUrl)
+$localFile = Join-Path (Get-Location) "ExternalLists.txt"
 
-$urls = $urlsContent -split "`n" |
+if (-not (Test-Path $localFile)) {
+    Write-Host "❌ ExternalLists.txt introuvable"
+    exit
+}
+
+$urls = Get-Content $localFile |
     ForEach-Object { $_.Trim() } |
-    Where-Object { $_ -ne "" -and -not $_.StartsWith("#") }
+    Where-Object {
+        $_ -ne "" -and
+        -not $_.StartsWith("#") -and
+        $_ -match '^https?://'
+    }
 
 Write-Host "🔗 Nombre de sources :" $urls.Count
+
+# DEBUG (optionnel)
+$urls | ForEach-Object { Write-Host "→ $_" }
 
 # ================================
 # DOWNLOAD (PARALLEL x2)
