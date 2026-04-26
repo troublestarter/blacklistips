@@ -201,6 +201,8 @@ Modifiez le connecteur, puis cliquez sur Afficher les entrées.
 * Suppression des IP incluses dans les CIDR
 * Génération de `blacklist.txt`
 
+<img width="1122" height="1402" alt="image" src="https://github.com/user-attachments/assets/6f0dff77-a215-499a-b2fc-e294132de04c" />
+
 ---
 
 ## 📂 Contenu
