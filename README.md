@@ -84,8 +84,8 @@ Edit the connector, then click View Entries to view the IP addresses in the feed
 * Clean data
 * Deduplicate entries
 * Remove whitelist entries from `custom-whitelist.txt`
-* Generate `blacklist.txt`
 * Optimize IPs included in CIDRs
+* Generate `blacklist.txt`
 
 ---
 
@@ -198,8 +198,8 @@ Modifiez le connecteur, puis cliquez sur Afficher les entrées.
 * Nettoyage des données
 * Suppression des doublons
 * Suppression des entrées présentes dans `custom-whitelist.txt`
-* Génération de `blacklist.txt`
 * Suppression des IP incluses dans les CIDR
+* Génération de `blacklist.txt`
 
 ---
 
