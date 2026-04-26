@@ -153,8 +153,6 @@ Puis allez dans :
 
 ## ⚙️ Génération du fichier `blacklist.txt`
 
-Le script PowerShell sert uniquement à générer la liste :
-
 * Utilisation de plusieurs listes externes et du fichier `custom-blacklist.txt`
 * Nettoyage des données
 * Suppression des doublons
