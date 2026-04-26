@@ -16,7 +16,7 @@
 * [📌 Description](#-description)
 * [🚀 Quick Usage (manual)](#-quick-usage-manual)
 * [🚀 Sophos XGS Firewall Usage (With MTR)](#-sophos-xgs-firewall-usage-with-mtr)
-* [🚀 Fortinet Firewall Usage (+7.x)](#-fortinet-firewall-usage-with-mtr)
+* [🚀 Fortinet Firewall Usage (+7.x)](#fortinet-firewall-usage-7x)
 * [⚙️ How `blacklist.txt` is generated](#️-how-blacklisttxt-is-generated)
 * [📂 Repository Content](#-repository-content)
 * [⚠️ Disclaimer](#️-disclaimer)
@@ -120,6 +120,7 @@ GPL v3
 * [📌 Description](#-description-1)
 * [🚀 Utilisation rapide (manuel)](#-utilisation-rapide-manuel)
 * [🚀 Utilisation Sophos XGS (MTR)](#-utilisation-sophos-xgs-mtr)
+* [🚀 Fortinet Firewall Usage (+7.x)](#utilisation-fortinet-firewall-7x)
 * [⚙️ Génération du fichier `blacklist.txt`](#️-génération-du-fichier-blacklisttxt)
 * [📂 Contenu](#-contenu)
 * [⚠️ Avertissement](#️-avertissement)
@@ -160,6 +161,16 @@ Puis allez dans :
 <img width="677" height="425" alt="image" src="https://github.com/user-attachments/assets/4f9d1a1b-343a-46fd-9eaf-ace781c69fe9" />
 
 <img width="1490" height="674" alt="image" src="https://github.com/user-attachments/assets/e073473e-6b07-4c91-be24-8cca66d1c4ce" />
+
+---
+
+## 🚀 Utilisation Fortinet Firewall (+7.x)
+Go to **Security Fabric > External Connectors** and click Create New.
+In the **Threat Feeds** section, click IP Address.
+Set the **Name** to the Blocklist.
+Set the **URI** of external resource to **https://blocklist-example.com/ip-blocklist/ip.txt**
+Configure the remaining settings as required, then click OK.
+Edit the connector, then click View Entries to view the IP addresses in the feed.
 
 ---
 
