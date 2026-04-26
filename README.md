@@ -60,7 +60,7 @@ Go to **Protect → Active Threat Response → Third-Party Threat Feeds** and ad
 
 ## ⚙️ How `blacklist.txt` is generated
 
-* Use multiple external lists and your custom `custom-blacklist.txt`
+* Use multiple external lists `ExternalLists.txt` and your custom `custom-blacklist.txt`
 * Clean data
 * Deduplicate entries
 * Remove whitelist entries from `custom-whitelist.txt`
@@ -75,6 +75,7 @@ Go to **Protect → Active Threat Response → Third-Party Threat Feeds** and ad
 * `count.txt` → Total entries in `blacklist.txt`
 * `custom-blacklist.txt` → Your own list to inject
 * `custom-whitelist.txt` → Your own list to exclude
+* `ExternalLists.txt` → Externals sources
 * `LICENSE` → License
 * `README.md` → Documentation
 
@@ -153,7 +154,7 @@ Puis allez dans :
 
 ## ⚙️ Génération du fichier `blacklist.txt`
 
-* Utilisation de plusieurs listes externes et du fichier `custom-blacklist.txt`
+* Utilisation de plusieurs listes externes `ExternalLists.txt` et du fichier `custom-blacklist.txt`
 * Nettoyage des données
 * Suppression des doublons
 * Suppression des entrées présentes dans `custom-whitelist.txt`
@@ -168,6 +169,7 @@ Puis allez dans :
 * `count.txt` → Nombre total d’entrées
 * `custom-blacklist.txt` → Liste personnalisée à ajouter
 * `custom-whitelist.txt` → Liste personnalisée à exclure
+* `ExternalLists.txt` → sources externes
 * `LICENSE` → Licence
 * `README.md` → Documentation
 
