@@ -62,11 +62,16 @@ Go to **Protect → Active Threat Response → Third-Party Threat Feeds** and ad
 ## 🚀 Fortinet Firewall Usage (+7.x)
 
 Go to **Security Fabric > External Connectors** and click Create New.
+
 In the **Threat Feeds** section, click IP Address.
+
 Set the **Name** to the Blocklist.
+
 Set the **URI** of external resource to
 **https://raw.githubusercontent.com/troublestarter/blacklistips/main/blacklist.txt**
+
 Configure the remaining settings as required, then click OK.
+
 Edit the connector, then click View Entries to view the IP addresses in the feed.
 
 ---
@@ -169,11 +174,16 @@ Puis allez dans :
 ## 🚀 Utilisation Fortinet Firewall (+7.x)
 
 Accédez à **Security Fabric > Connecteurs externes** et cliquez sur Créer.
+
 Dans la section **Flux de menaces**, cliquez sur Adresse IP.
+
 Saisissez le nom « Liste de blocage » dans le champ Nom.
+
 Définissez l'URI sur :
 **https://raw.githubusercontent.com/troublestarter/blacklistips/main/blacklist.txt**
+
 Configurez les autres paramètres selon vos besoins, puis cliquez sur OK.
+
 Modifiez le connecteur, puis cliquez sur Afficher les entrées.
 
 ---
