@@ -4,8 +4,8 @@
 
 ## 🌐 Select your Languages !
 
-* 🇬🇧 [English Version](#english-version)
-* 🇫🇷 [Version Française](#version-française)
+* 🇬🇧 [English Version](#-english-version)
+* 🇫🇷 [Version Française](#-version-française)
 
 ---
 
@@ -13,15 +13,15 @@
 
 ## 📑 Table of Contents
 
-* [📌 Description](#description)
-* [🚀 Quick Usage (manual)](#quick-usage-manual)
-* [🚀 Sophos XGS Firewall Usage (With MTR)](#sophos-xgs-firewall-usage-with-mtr)
-* [🚀 Fortinet Firewall Usage (+7.x)](#fortinet-firewall-usage-7x)
-* [⚙️ How `blacklist.txt` is generated](#how-blacklisttxt-is-generated)
-* [📂 Repository Content](#repository-content)
-* [⚠️ Disclaimer](#disclaimer)
-* [🤝 Contribution](#contribution)
-* [📄 License](#license)
+* [📌 Description](#-description)
+* [🚀 Quick Usage (manual)](#-quick-usage-manual)
+* [🚀 Sophos XGS Firewall Usage (With MTR)](#-sophos-xgs-firewall-usage-with-mtr)
+* [🚀 Fortinet Firewall Usage (+7.x)](#-fortinet-firewall-usage-7x)
+* [⚙️ How `blacklist.txt` is generated](#-how-blacklisttxt-is-generated)
+* [📂 Repository Content](#-repository-content)
+* [⚠️ Disclaimer](#-disclaimer)
+* [🤝 Contribution](#-contribution)
+* [📄 License](#-license)
 
 ---
 
@@ -61,12 +61,12 @@ Go to **Protect → Active Threat Response → Third-Party Threat Feeds** and ad
 
 ## 🚀 Fortinet Firewall Usage (+7.x)
 
-Go to **Security Fabric > External Connectors** and click Create New.  
-In the **Threat Feeds** section, click IP Address.  
-Set the **Name** to the Blocklist.  
-Set the **URI** of external resource to  
-**https://raw.githubusercontent.com/troublestarter/blacklistips/main/blacklist.txt**  
-Configure the remaining settings as required, then click OK.  
+Go to **Security Fabric > External Connectors** and click Create New.
+In the **Threat Feeds** section, click IP Address.
+Set the **Name** to the Blocklist.
+Set the **URI** of external resource to
+**https://raw.githubusercontent.com/troublestarter/blacklistips/main/blacklist.txt**
+Configure the remaining settings as required, then click OK.
 Edit the connector, then click View Entries to view the IP addresses in the feed.
 
 ---
@@ -104,7 +104,7 @@ Edit the connector, then click View Entries to view the IP addresses in the feed
 
 ## 🤝 Contribution
 
-Contributions are welcome via Pull Requests and Issues.  
+Contributions are welcome via Pull Requests and Issues.
 Changes are reviewed before being merged.
 
 ---
@@ -119,15 +119,15 @@ GPL v3
 
 ## 📑 Sommaire
 
-* [📌 Description](#description-1)
-* [🚀 Utilisation rapide (manuel)](#utilisation-rapide-manuel)
-* [🚀 Utilisation Sophos XGS (MTR)](#utilisation-sophos-xgs-mtr)
-* [🚀 Utilisation Fortinet Firewall (+7.x)](#utilisation-fortinet-firewall-7x)
-* [⚙️ Génération du fichier `blacklist.txt`](#generation-du-fichier-blacklisttxt)
-* [📂 Contenu](#contenu)
-* [⚠️ Avertissement](#avertissement)
-* [🤝 Contribution](#contribution-1)
-* [📄 Licence](#licence-1)
+* [📌 Description](#-description-1)
+* [🚀 Utilisation rapide (manuel)](#-utilisation-rapide-manuel)
+* [🚀 Utilisation Sophos XGS (MTR)](#-utilisation-sophos-xgs-mtr)
+* [🚀 Utilisation Fortinet Firewall (+7.x)](#-utilisation-fortinet-firewall-7x)
+* [⚙️ Génération du fichier `blacklist.txt`](#-génération-du-fichier-blacklisttxt)
+* [📂 Contenu](#-contenu)
+* [⚠️ Avertissement](#-avertissement)
+* [🤝 Contribution](#-contribution-1)
+* [📄 Licence](#-licence-1)
 
 ---
 
@@ -157,7 +157,7 @@ Ajoutez simplement la source suivante :
 
 https://raw.githubusercontent.com/troublestarter/blacklistips/main/blacklist.txt
 
-Puis allez dans :  
+Puis allez dans :
 **Protect → Active Threat Response → Third-Party Threat Feeds**
 
 <img width="677" height="425" alt="image" src="https://github.com/user-attachments/assets/4f9d1a1b-343a-46fd-9eaf-ace781c69fe9" />
@@ -168,12 +168,12 @@ Puis allez dans :
 
 ## 🚀 Utilisation Fortinet Firewall (+7.x)
 
-Accédez à **Security Fabric > Connecteurs externes** et cliquez sur Créer.  
-Dans la section **Flux de menaces**, cliquez sur Adresse IP.  
-Saisissez le nom « Liste de blocage » dans le champ Nom.  
-Définissez l'URI sur :  
-**https://raw.githubusercontent.com/troublestarter/blacklistips/main/blacklist.txt**  
-Configurez les autres paramètres selon vos besoins, puis cliquez sur OK.  
+Accédez à **Security Fabric > Connecteurs externes** et cliquez sur Créer.
+Dans la section **Flux de menaces**, cliquez sur Adresse IP.
+Saisissez le nom « Liste de blocage » dans le champ Nom.
+Définissez l'URI sur :
+**https://raw.githubusercontent.com/troublestarter/blacklistips/main/blacklist.txt**
+Configurez les autres paramètres selon vos besoins, puis cliquez sur OK.
 Modifiez le connecteur, puis cliquez sur Afficher les entrées.
 
 ---
@@ -211,7 +211,7 @@ Modifiez le connecteur, puis cliquez sur Afficher les entrées.
 
 ## 🤝 Contribution
 
-Les contributions sont les bienvenues via Pull Requests et Issues.  
+Les contributions sont les bienvenues via Pull Requests et Issues.
 Les modifications sont validées avant intégration.
 
 ---
