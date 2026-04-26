@@ -4,8 +4,8 @@
 
 ## 🌐 Select your Languages !
 
-* 🇬🇧 [English Version](#-english-version)
-* 🇫🇷 [Version Française](#-version-française)
+* 🇬🇧 [English Version](#english-version)
+* 🇫🇷 [Version Française](#version-francaise)
 
 ---
 
@@ -13,15 +13,15 @@
 
 ## 📑 Table of Contents
 
-* [📌 Description](#-description)
-* [🚀 Quick Usage (manual)](#-quick-usage-manual)
-* [🚀 Sophos XGS Firewall Usage (With MTR)](#-sophos-xgs-firewall-usage-with-mtr)
+* [📌 Description](#description)
+* [🚀 Quick Usage (manual)](#quick-usage-manual)
+* [🚀 Sophos XGS Firewall Usage (With MTR)](#sophos-xgs-firewall-usage-with-mtr)
 * [🚀 Fortinet Firewall Usage (+7.x)](#fortinet-firewall-usage-7x)
-* [⚙️ How `blacklist.txt` is generated](#️-how-blacklisttxt-is-generated)
-* [📂 Repository Content](#-repository-content)
-* [⚠️ Disclaimer](#️-disclaimer)
-* [🤝 Contribution](#-contribution)
-* [📄 License](#-license)
+* [⚙️ How blacklist.txt is generated](#how-blacklisttxt-is-generated)
+* [📂 Repository Content](#repository-content)
+* [⚠️ Disclaimer](#disclaimer)
+* [🤝 Contribution](#contribution)
+* [📄 License](#license)
 
 ---
 
@@ -53,23 +53,20 @@ Just add the source below:
 
 Go to **Protect → Active Threat Response → Third-Party Threat Feeds** and add a new source.
 
-<img width="677" height="425" alt="image" src="https://github.com/user-attachments/assets/4f9d1a1b-343a-46fd-9eaf-ace781c69fe9" />
-
-<img width="1490" height="674" alt="image" src="https://github.com/user-attachments/assets/e073473e-6b07-4c91-be24-8cca66d1c4ce" />
-
 ---
 
 ## 🚀 Fortinet Firewall Usage (+7.x)
+
 Go to **Security Fabric > External Connectors** and click Create New.
 In the **Threat Feeds** section, click IP Address.
 Set the **Name** to the Blocklist.
-Set the **URI** of external resource to **https://blocklist-example.com/ip-blocklist/ip.txt**
-Configure the remaining settings as required, then click OK.
-Edit the connector, then click View Entries to view the IP addresses in the feed.
+Set the **URI** to:
+**https://raw.githubusercontent.com/troublestarter/blacklistips/main/blacklist.txt**
+Click OK and validate.
 
 ---
 
-## ⚙️ How `blacklist.txt` is generated
+## ⚙️ How blacklist.txt is generated
 
 * Use multiple external lists `ExternalLists.txt` and your custom `custom-blacklist.txt`
 * Clean data
@@ -82,13 +79,13 @@ Edit the connector, then click View Entries to view the IP addresses in the feed
 
 ## 📂 Repository Content
 
-* `blacklist.txt` → Final list (IP + CIDR) of malicious actors
-* `count.txt` → Total entries in `blacklist.txt`
-* `custom-blacklist.txt` → Your own list to inject
-* `custom-whitelist.txt` → Your own list to exclude
-* `ExternalLists.txt` → Externals sources
-* `LICENSE` → License
-* `README.md` → Documentation
+* `blacklist.txt`
+* `count.txt`
+* `custom-blacklist.txt`
+* `custom-whitelist.txt`
+* `ExternalLists.txt`
+* `LICENSE`
+* `README.md`
 
 ---
 
@@ -103,7 +100,6 @@ Edit the connector, then click View Entries to view the IP addresses in the feed
 ## 🤝 Contribution
 
 Contributions are welcome via Pull Requests and Issues.
-Changes are reviewed before being merged.
 
 ---
 
@@ -117,15 +113,15 @@ GPL v3
 
 ## 📑 Sommaire
 
-* [📌 Description](#-description-1)
-* [🚀 Utilisation rapide (manuel)](#-utilisation-rapide-manuel)
-* [🚀 Utilisation Sophos XGS (MTR)](#-utilisation-sophos-xgs-mtr)
-* [🚀 Fortinet Firewall Usage (+7.x)](#utilisation-fortinet-firewall-7x)
-* [⚙️ Génération du fichier `blacklist.txt`](#️-génération-du-fichier-blacklisttxt)
-* [📂 Contenu](#-contenu)
-* [⚠️ Avertissement](#️-avertissement)
-* [🤝 Contribution](#-contribution-1)
-* [📄 Licence](#-licence-1)
+* [📌 Description](#description-1)
+* [🚀 Utilisation rapide](#utilisation-rapide)
+* [🚀 Utilisation Sophos XGS](#utilisation-sophos-xgs)
+* [🚀 Utilisation Fortinet](#utilisation-fortinet-firewall-7x)
+* [⚙️ Génération du fichier](#generation-du-fichier-blacklisttxt)
+* [📂 Contenu](#contenu)
+* [⚠️ Avertissement](#avertissement)
+* [🤝 Contribution](#contribution-1)
+* [📄 Licence](#licence)
 
 ---
 
@@ -133,13 +129,9 @@ GPL v3
 
 Ce dépôt fournit une blacklist d’IP et de réseaux (CIDR) suspects ou malveillants.
 
-Les données sont agrégées à partir de sources publiques, nettoyées et dédupliquées.
-
 ---
 
-## 🚀 Utilisation rapide (manuel)
-
-👉 Aucun script nécessaire.
+## 🚀 Utilisation rapide
 
 Utilisez directement :
 
@@ -147,53 +139,37 @@ https://raw.githubusercontent.com/troublestarter/blacklistips/main/blacklist.txt
 
 ---
 
-## 🚀 Utilisation Sophos XGS (MTR)
+## 🚀 Utilisation Sophos XGS
 
-👉 Aucun script nécessaire.
+Ajoutez la source dans :
 
-Ajoutez simplement la source suivante :
-
-https://raw.githubusercontent.com/troublestarter/blacklistips/main/blacklist.txt
-
-Puis allez dans :
 **Protect → Active Threat Response → Third-Party Threat Feeds**
-
-<img width="677" height="425" alt="image" src="https://github.com/user-attachments/assets/4f9d1a1b-343a-46fd-9eaf-ace781c69fe9" />
-
-<img width="1490" height="674" alt="image" src="https://github.com/user-attachments/assets/e073473e-6b07-4c91-be24-8cca66d1c4ce" />
 
 ---
 
 ## 🚀 Utilisation Fortinet Firewall (+7.x)
-Accédez à **Security Fabric > Connecteurs externes** et cliquez sur Créer.
-Dans la section **Flux de menaces**, cliquez sur Adresse IP.
-Saisissez le nom « Liste de blocage » dans le champ Nom.
-Définissez l'URI de la ressource externe sur **https://raw.githubusercontent.com/troublestarter/blacklistips/main/blacklist.txt**.
-Configurez les autres paramètres selon vos besoins, puis cliquez sur OK.
-Modifiez le connecteur, puis cliquez sur Afficher les entrées pour consulter les adresses IP du flux.
+
+Accédez à **Security Fabric > Connecteurs externes**
+Ajoutez un flux IP avec :
+
+**https://raw.githubusercontent.com/troublestarter/blacklistips/main/blacklist.txt**
 
 ---
 
-## ⚙️ Génération du fichier `blacklist.txt`
+## ⚙️ Génération du fichier blacklist.txt
 
-* Utilisation de plusieurs listes externes `ExternalLists.txt` et du fichier `custom-blacklist.txt`
-* Nettoyage des données
-* Suppression des doublons
-* Suppression des entrées présentes dans `custom-whitelist.txt`
-* Génération de `blacklist.txt`
-* Suppression des IP incluses dans les CIDR
+* Agrégation de sources
+* Nettoyage
+* Déduplication
+* Application whitelist
 
 ---
 
 ## 📂 Contenu
 
-* `blacklist.txt` → Liste finale (IP + CIDR)
-* `count.txt` → Nombre total d’entrées
-* `custom-blacklist.txt` → Liste personnalisée à ajouter
-* `custom-whitelist.txt` → Liste personnalisée à exclure
-* `ExternalLists.txt` → sources externes
-* `LICENSE` → Licence
-* `README.md` → Documentation
+* blacklist.txt
+* count.txt
+* custom files
 
 ---
 
@@ -201,14 +177,12 @@ Modifiez le connecteur, puis cliquez sur Afficher les entrées pour consulter le
 
 * Faux positifs possibles
 * IP dynamiques
-* Dépend des sources
 
 ---
 
 ## 🤝 Contribution
 
-Les contributions sont les bienvenues via Pull Requests et Issues.
-Les modifications sont validées avant intégration.
+Contributions bienvenues.
 
 ---
 
