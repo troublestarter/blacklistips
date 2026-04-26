@@ -74,6 +74,8 @@ Configure the remaining settings as required, then click OK.
 
 Edit the connector, then click View Entries to view the IP addresses in the feed.
 
+<img width="1071" height="530" alt="image" src="https://github.com/user-attachments/assets/54cfe102-9bf0-4a41-9e81-17a089197b94" />
+
 ---
 
 ## ⚙️ How `blacklist.txt` is generated
@@ -185,6 +187,8 @@ Définissez l'URI sur :
 Configurez les autres paramètres selon vos besoins, puis cliquez sur OK.
 
 Modifiez le connecteur, puis cliquez sur Afficher les entrées.
+
+<img width="1071" height="530" alt="image" src="https://github.com/user-attachments/assets/54cfe102-9bf0-4a41-9e81-17a089197b94" />
 
 ---
 
