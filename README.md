@@ -2,7 +2,7 @@
 
 > 🔄 Automatically updated threat intelligence feed (IP + CIDR)
 
-## 🌐 Select your Languages !
+## 🌐 Select your Language !
 
 * 🇬🇧 [English Version](#-english-version)
 * 🇫🇷 [Version Française](#-version-française)
