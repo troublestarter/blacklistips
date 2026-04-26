@@ -87,6 +87,8 @@ Edit the connector, then click View Entries to view the IP addresses in the feed
 * Optimize IPs included in CIDRs
 * Generate `blacklist.txt`
 
+<img width="561" height="701" alt="workflow-EN" src="https://github.com/user-attachments/assets/d5585d08-7bb5-404a-99a9-161077c7bf79" />
+
 ---
 
 ## 📂 Repository Content
