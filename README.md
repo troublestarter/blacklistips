@@ -16,10 +16,8 @@
 - [📌 Description](#-description)
 - [🚀 Quick Usage (manual)](#-quick-usage-manual)
 - [🚀 Sophos XGS Firewall Usage (With MTR)](#-sophos-xgs-firewall-usage-with-mtr)
-- [⚙️ Your own Usage with the script](#️-your-own-usage-with-the-script)
-- [⚙️ CIDR Optimization Option](#️-cidr-optimization-option)
+- [⚙️ All information about how is generated the `blacklist.txt` file](#️-all-information-about-blakclist.txt)
 - [📂 Repository Content](#-repository-content)
-- [📡 Sources](#-sources)
 - [⚠️ Disclaimer](#️-disclaimer)
 - [🤝 Contribution](#-contribution)
 - [📄 License](#-license)
@@ -60,28 +58,14 @@ Go to **Protect → Active Threat Response → Third-Party Threat Feeds** and ad
 
 ---
 
-## ⚙️ Your own Usage with the script
+## ⚙️ All information about how is generated the `blacklist.txt` file
 
-The PowerShell script (`update-blacklist.ps1`) is optional and used to:
-
-- Download external lists and your custom blacklist from `ExternalLists.txt`
+- Use many external lists and your custom `custom-blacklist.txt`
 - Clean data
 - Deduplicate entries
-- Delete whitelist records
+- Delete whitelist records existing in `custom-whitelist.txt`
 - Generate `blacklist.txt`
-- Optimization of IP addresses that would be contained in CIDRs (Optional)
-- Push updates to GitHub
-
----
-
-## ⚙️ CIDR Optimization Option
-
-```powershell
-$enableCIDROptimization = $false
-```
-
-- OFF → fast, keeps IP + CIDR (recommended, no impact on firewall efficiency)
-- ON → removes IP included in CIDR (slower, minimal gain)
+- Optimization of IP addresses that would be contained in CIDRs
 
 ---
 
@@ -91,15 +75,8 @@ $enableCIDROptimization = $false
 - `count.txt` → total entries in `blacklist.txt` file
 - `custom-blacklist.txt` → You own list of IPs or CIDR to inject to final blacklist.txt
 - `custom-whitelist.txt` → You own list of IPs or CIDR to exclude to final blacklist.txt
-- `ExternalLists.txt` → External sources of IPs and CIDR
-- `update-blacklist.ps1` → script
-
----
-
-## 📡 Sources
-
-See `ExternalLists.txt` for the full list of providers.
-
+- `LICENSE` → the licence for all files
+- `README.md` → This documentation
 ---
 
 ## ⚠️ Disclaimer
@@ -107,8 +84,6 @@ See `ExternalLists.txt` for the full list of providers.
 - False positives may occur  
 - IPs may be dynamic  
 - Depends on external sources  
-
-👉 Use with caution.
 
 ---
 
@@ -132,10 +107,8 @@ GPL v3
 - [📌 Description](#-description-1)
 - [🚀 Utilisation rapide (manuel)](#-utilisation-rapide-manuel)
 - [🚀 Utilisation Sophos XGS (MTR)](#-utilisation-sophos-xgs-mtr)
-- [⚙️ Utilisation avancée avec script](#️-utilisation-avancée-avec-script)
-- [⚙️ Option CIDR](#️-option-cidr)
+- [⚙️ Toutes les informations concernant la génération du fichier `blacklist.txt`](#️-informations-avancées-du-fichier-blakclist.txt)
 - [📂 Contenu](#-contenu)
-- [📡 Sources](#-sources-1)
 - [⚠️ Avertissement](#️-avertissement)
 - [🤝 Contribution](#-contribution-1)
 - [📄 Licence](#-licence-1)
@@ -177,44 +150,27 @@ Puis allez dans :
 
 ---
 
-## ⚙️ Utilisation avancée avec script
+## ⚙️ Toutes les informations concernant la génération du fichier `blacklist.txt`
 
 Le script PowerShell sert uniquement à générer la liste :
 
-- Récupération des sources externe et custom depuis `ExternalLists.txt`
-- Nettoyage des données
-- Déduplication des données
-- Supprime les enregistrements de la whitelist
-- Optimisation des IP qui seraient contenu dans les CIDR (En option)
-- Publication des mises à jour sur github
-
----
-
-## ⚙️ Option CIDR
-
-```powershell
-$enableCIDROptimization = $false
-```
-
-- OFF → rapide, conserve IP + CIDR (recommandé)
-- ON → supprime les IP incluses dans des CIDR (plus lent et gain faible)
+- Utiliser plusieurs listes externes et votre fichier `custom-blacklist.txt` personnalisé
+- Les données sont nettoyées
+- Les doublons sont supprimés
+- Les enregistrements de la liste blanche présents dans `custom-whitelist.txt` sont supprimés du résultat final
+- Génération de `blacklist.txt`
+- Les adresses IP contenues dans les CIDR sont supprimées
 
 ---
 
 ## 📂 Contenu
 
-- `blacklist.txt` → Liste finale (IP + CIDR) d'acteurs malveillants
+- `blacklist.txt` → Liste finale (IP + CIDR) des acteurs malveillants
 - `count.txt` → Nombre total d'entrées dans le fichier `blacklist.txt`
-- `custom-blacklist.txt` → Votre liste d'adresses IP ou de CIDR à ajouter à la liste noire finale (blacklist.txt)
-- `custom-whitelist.txt` → Votre liste d'adresses IP ou de CIDR à exclure de la liste noire finale (blacklist.txt)
-- `ExternalLists.txt` → Sources externes d'adresses IP et de CIDR
-- `update-blacklist.ps1` → Script
-
----
-
-## 📡 Sources
-
-Voir `ExternalLists.txt`
+- `custom-blacklist.txt` → Votre liste d'adresses IP ou de CIDR à ajouter à la liste noire finale
+- `custom-whitelist.txt` → Votre liste d'adresses IP ou de CIDR à exclure de la liste noire finale
+- `LICENSE` → Licence applicable à tous les fichiers
+- `README.md` → Documentation
 
 ---
 
@@ -222,9 +178,7 @@ Voir `ExternalLists.txt`
 
 - Faux positifs possibles  
 - IP dynamiques  
-- Dépend des sources  
-
-👉 Utilisation avec discernement
+- Dépend des sources
 
 ---
 
