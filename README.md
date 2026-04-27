@@ -135,7 +135,7 @@ GPL v3
 * [⚙️ Génération du fichier `blacklist.txt`](#-génération-du-fichier-blacklisttxt)
 * [📂 Contenu](#-contenu)
 * [⚠️ Avertissement](#-avertissement)
-* [🤝 Contribution](#-contribution-1)
+* [🤝 Contributions et demandes de modifications](#-contributions-et-demandes-de-modifications)
 * [📄 Licence](#-licence-1)
 
 ---
