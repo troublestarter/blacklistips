@@ -17,6 +17,7 @@
 * [🚀 Quick Usage (manual)](#-quick-usage-manual)
 * [🚀 Sophos XGS Firewall Usage (With MTR)](#-sophos-xgs-firewall-usage-with-mtr)
 * [🚀 Fortinet Firewall Usage (+7.x)](#-fortinet-firewall-usage-7x)
+* [🚀 BunkerWeb WAF Usage](#-bunker-waf-usage)
 * [⚙️ How `blacklist.txt` is generated](#-how-blacklisttxt-is-generated)
 * [📂 Repository Content](#-repository-content)
 * [⚠️ Disclaimer](#-disclaimer)
@@ -78,6 +79,21 @@ Edit the connector, then click View Entries to view the IP addresses in the feed
 
 ---
 
+## 🚀 BunkerWeb WAF Usage
+
+Go to **Global Settings > Blacklist**
+
+Set the **Blacklist IP/network URLs** with
+**https://raw.githubusercontent.com/troublestarter/blacklistips/main/blacklist.txt**
+
+Click **Save**
+
+<img width="1848" height="766" alt="image" src="https://github.com/user-attachments/assets/af25e9ea-7fae-4067-be41-10c88a17c8d2" />
+
+Note : You can also prefer choose the **Services** page for specific setup instead of the Global Settings.
+
+---
+
 ## ⚙️ How `blacklist.txt` is generated
 
 * Use multiple external lists `ExternalLists.txt` and your custom `custom-blacklist.txt`
@@ -130,8 +146,9 @@ GPL v3
 
 * [📌 Description](#-description-1)
 * [🚀 Utilisation rapide (manuel)](#-utilisation-rapide-manuel)
-* [🚀 Utilisation Sophos XGS (MTR)](#-utilisation-sophos-xgs-mtr)
-* [🚀 Utilisation Fortinet Firewall (+7.x)](#-utilisation-fortinet-firewall-7x)
+* [🚀 Utiliser avec Sophos XGS (MTR)](#-utiliser-avec-sophos-xgs-mtr)
+* [🚀 Utiliser avec Fortinet Firewall (+7.x)](#-utilisation-fortinet-firewall-7x)
+* [🚀 Utiliser avec BunkerWeb](#-utilisation-avec-bunkerweb)
 * [⚙️ Génération du fichier `blacklist.txt`](#-génération-du-fichier-blacklisttxt)
 * [📂 Contenu](#-contenu)
 * [⚠️ Avertissement](#-avertissement)
@@ -191,6 +208,21 @@ Configurez les autres paramètres selon vos besoins, puis cliquez sur OK.
 Modifiez le connecteur, puis cliquez sur Afficher les entrées.
 
 <img width="1071" height="530" alt="image" src="https://github.com/user-attachments/assets/54cfe102-9bf0-4a41-9e81-17a089197b94" />
+
+---
+
+## 🚀 BunkerWeb WAF Usage
+
+Go to **Global Settings > Blacklist**
+
+Set the **Blacklist IP/network URLs** with
+**https://raw.githubusercontent.com/troublestarter/blacklistips/main/blacklist.txt**
+
+Click **Save**
+
+<img width="1848" height="766" alt="image" src="https://github.com/user-attachments/assets/af25e9ea-7fae-4067-be41-10c88a17c8d2" />
+
+Note : You can also prefer choose the **Services** page for specific setup instead of the Global Settings.
 
 ---
 
