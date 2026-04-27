@@ -175,7 +175,7 @@ https://raw.githubusercontent.com/troublestarter/blacklistips/main/blacklist.txt
 
 ---
 
-## 🚀 Utiliser Sophos XGS (MTR)
+## 🚀 Utiliser avec Sophos XGS (MTR)
 
 👉 Aucun script nécessaire.
 
@@ -192,7 +192,7 @@ Puis allez dans :
 
 ---
 
-## 🚀 Utiliser Fortinet Firewall (+7.x)
+## 🚀 Utiliser avec Fortinet Firewall (+7.x)
 
 Accédez à **Security Fabric > Connecteurs externes** et cliquez sur Créer.
 
