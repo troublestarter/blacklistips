@@ -20,7 +20,7 @@
 * [⚙️ How `blacklist.txt` is generated](#-how-blacklisttxt-is-generated)
 * [📂 Repository Content](#-repository-content)
 * [⚠️ Disclaimer](#-disclaimer)
-* [🤝 Contribution](#-contribution)
+* [🤝 Contributions and requests for modifications](#-contribution-and-requests-for-modifications)
 * [📄 License](#-license)
 
 ---
