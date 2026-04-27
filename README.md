@@ -111,9 +111,9 @@ Edit the connector, then click View Entries to view the IP addresses in the feed
 
 ---
 
-## 🤝 Contribution
+## 🤝 Contributions and requests for modifications
 
-Contributions are welcome via Pull Requests and Issues.
+Contributions are welcome via "Issue" or "Pull requests".
 Changes are reviewed before being merged.
 
 ---
@@ -228,9 +228,9 @@ Modifiez le connecteur, puis cliquez sur Afficher les entrées.
 
 ---
 
-## 🤝 Contribution
+## 🤝 Contributions et demandes de modifications
 
-Les contributions sont les bienvenues via Pull Requests et Issues.
+Les contributions sont les bienvenues via "Issues" ou encore "Pull request".
 Les modifications sont validées avant intégration.
 
 ---
