@@ -21,4 +21,5 @@ https://iplists.firehol.org/files/firehol_abusers_30d.netset
 https://raw.githubusercontent.com/troublestarter/blacklistips/main/maltiverse_cybercrime_free_feed.ipv4_26042026.txt
 https://raw.githubusercontent.com/troublestarter/blacklistips/main/maltiverse_c%26c_free_feed.ipv4_26042026.txt
 https://raw.githubusercontent.com/troublestarter/blacklistips/main/maltiverse_malware_free_feed.ipv4_26042026.txt
+https://raw.githubusercontent.com/troublestarter/blacklistips/main/main/maltiverse_Known-attackers_free_feed.ipv4_27042026.txt
 https://raw.githubusercontent.com/troublestarter/blacklistips/main/custom-blacklist.txt
